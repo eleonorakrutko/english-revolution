@@ -1,4 +1,4 @@
-import { Flex, ModalBody, ModalFooter, ModalHeader, Text } from "@chakra-ui/react";
+import { Flex, Link, ModalBody, ModalFooter, ModalHeader, Text } from "@chakra-ui/react";
 import React from "react";
 import { RolesEnum } from "../../../../../types/roles-enum";
 import { CustomButton, CustomModal, CustomSpinner } from "../../../../../ui";
@@ -51,6 +51,13 @@ export const LessonDetailModal = ({isOpen, onClose, id}: Props) => {
                                     </Flex>
                                 </Flex>
                             }
+
+                            {(lessonDetails.group_name && lessonDetails.group) &&
+                                <Flex fontSize='lg' p={2}>
+                                    <Text as='b'>Group:</Text>
+                                    <Text ml={2}>{lessonDetails.group_name}</Text>
+                                </Flex>
+                            }
                             
                             <Flex direction='column' p={2} >
                                 <Flex fontSize='lg'>
@@ -77,6 +84,13 @@ export const LessonDetailModal = ({isOpen, onClose, id}: Props) => {
                                     </Text>
                                 </Flex>
                             </Flex>
+
+                            {lessonDetails.online_meeting_link && 
+                                <Flex fontSize='lg' p={2}>
+                                    <Text as='b'>Online meeting link:</Text>
+                                    <Link href='https://www.google.com/' ml={2}>{lessonDetails.online_meeting_link}</Link>
+                                </Flex>
+                            }
         
                         </Flex>
                     }
