@@ -1,0 +1,31 @@
+.wrapperButton{
+    display: flex;
+    flex-direction: column;
+    padding-top: 30px;
+    width: 100%;
+}
+
+.wrapperText{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 62px;
+    width: 100%;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.navigateButton{
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    padding: 18px;
+    color: #000;
+    font-size: 18px;
+}
+
+.navigateButton:hover{
+    background-color: #B794F4;
+    color: #fff;
+    transition: 0.3s;
+}

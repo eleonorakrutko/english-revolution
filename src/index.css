@@ -1,0 +1,21 @@
+#root{
+    height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+a.active{
+    background-color: #805AD5;
+    color: #fff;
+    transition: 0.3s;
+}
+
+::-webkit-scrollbar-track {
+	background-color: #fff; /*Цвет скролла*/
+} 
+::-webkit-scrollbar-thumb { 
+	border-radius: 7px; /*Закругление ползунка*/
+	background-color: #E9D8FD; /*Цвет ползунка*/
+} 
+::-webkit-scrollbar { 
+	width: 7px;  /*Толщина скролла*/
+}

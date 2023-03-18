@@ -1,0 +1,11 @@
+.wrapper{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: 100%;
+    padding: 0 20px;
+}
+
+.textWrapper{
+    font-weight: bold;
+}

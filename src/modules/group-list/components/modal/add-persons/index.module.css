@@ -1,0 +1,13 @@
+.studentList{
+    overflow-y: auto;
+    padding-left: 15px;
+}
+
+.wrapperStudentList{
+    max-height: 100px;
+    border: 2px solid #B794F4;
+    border-radius: 7px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 3px;
+}
