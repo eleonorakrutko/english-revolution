@@ -1,7 +1,11 @@
 import { Checkbox, FormControl, FormLabel, ModalBody, ModalFooter, ModalHeader, Stack, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useTypedDispatch } from "../../../../../common/hooks/useTypedDispatch";
+import { CustomInput } from "../../../../../components";
 import { validate } from "../../../../../helpers";
-import { CustomButton, CustomInput, CustomModal } from "../../../../../ui";
+import { Person } from "../../../../../types/person";
+import { CustomButton, CustomModal } from "../../../../../ui";
+import { showAlert } from "../../../../layout/store/alert-slice";
 import { useAddPersonToTheGroupMutation, useGetStudentsQuery } from "../../../api/group-api";
 import styles from './index.module.css'
 
@@ -12,30 +16,27 @@ type Props = {
 }
 
 export const AddPersonModal = ({isOpen, onClose, id}: Props) => {
-    const [studentInputValue, setStudentInputValue] = useState('')
-    const [choosedStudentId, setChoosedStudentId] = useState('')
+    const [studentInputValue, setStudentInputValue] = useState<string>('')
+    const [choosedStudentId, setChoosedStudentId] = useState<number | null>(null)
+    const dispatch = useTypedDispatch()
 
     const { data: students } = useGetStudentsQuery(studentInputValue, {})
-    const [ addPerson, {isError} ] = useAddPersonToTheGroupMutation()
-
+    const [ addPerson, {isError, isSuccess} ] = useAddPersonToTheGroupMutation()
+    
     const addPersonHandler = async () => {
       addPerson({id, choosedStudentId})
-      onClose()
     }
 
-    // useEffect(() => {
-    //     const getData = setTimeout(() =>{
-    //       http.get(`/student/search?query=${studentInputValue}`)
-    //       .then(response => {
-    //         console.log(response.data)
-    //         setStudents(response.data)
-    //         if(students && !students.length){
-    //           setChoosedStudentId('')
-    //         }
-    //       })
-    //       } , 500)
-    //     return () => clearTimeout(getData);
-    //   }, [studentInputValue]);
+    useEffect(() => {
+      if(isSuccess){
+          dispatch(showAlert({type: 'success', text: 'Student was successfully added!',}))
+          onClose()
+      }
+      if(isError){
+          dispatch(showAlert({type: 'error', text: 'Failed to add student!'}))
+          onClose()
+      }
+    }, [isSuccess, isError])
 
     return(
         <CustomModal isOpen={isOpen} onClose={onClose}>
@@ -54,7 +55,7 @@ export const AddPersonModal = ({isOpen, onClose, id}: Props) => {
                   { (students && students.length) ?
                       <Stack className={styles.wrapperStudentList}>
                         <Stack className={styles.studentList}>
-                          { students?.map(({first_name, last_name, user_role_id}: any) => 
+                          { students?.map(({first_name, last_name, user_role_id}: Person) => 
                                 <Checkbox 
                                   isChecked={choosedStudentId === user_role_id} 
                                   onChange={() =>  {

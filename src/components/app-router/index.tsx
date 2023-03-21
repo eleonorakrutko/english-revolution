@@ -8,6 +8,11 @@ import { checkAuthorization } from "../../modules/sign-in/store/action-creators"
 import { useTypedSelector } from "../../common/hooks/useTypedSelector";
 import { CustomSpinner } from "../../ui";
 
+interface Route {
+    path: string,
+    page: React.FC,
+}
+
 export const AppRouter = () => {
     const dispatch = useTypedDispatch()
     const { user, loading, error } = useTypedSelector(state => state.authReducer)
@@ -32,7 +37,7 @@ export const AppRouter = () => {
                     {user && 
                         <Route path="/" element={<Layout/>}>
                             <Route path='' element={<Navigate to={getPagesByRole(user.role_type)[0].path}/>}/>
-                            { getPagesByRole(user.role_type).map(({page: Page, path}: any) => 
+                            { getPagesByRole(user.role_type).map(({page: Page, path}: Route) => 
                                 <Route key={path} path={path} element={<Page/>}/>
                             )}
                         </Route>

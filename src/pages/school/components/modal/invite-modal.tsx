@@ -1,7 +1,10 @@
 import { FormControl, FormLabel, ModalBody, ModalFooter, ModalHeader } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { CustomButton, CustomInput, CustomModal } from "../../../../ui";
-import { useSendInviteMutation } from "../../api/cooperation-api";
+import React, { useState, useEffect } from "react";
+import { useTypedDispatch } from "../../../../common/hooks/useTypedDispatch";
+import { CustomInput } from "../../../../components";
+import { showAlert } from "../../../../modules/layout/store/alert-slice";
+import { CustomButton, CustomModal } from "../../../../ui";
+import { useSendInviteMutation } from "../../api/cooperations-api"; 
 
 type Props = {
     onClose: () => void,
@@ -10,22 +13,32 @@ type Props = {
 }
 
 export const InviteModal = ({onClose, isOpen, user_id}: Props) => {
-    const [message, setMessage] = useState('')
-
-    const [ sendInvite ] = useSendInviteMutation()
+    const [message, setMessage] = useState<string>('')
+    const dispatch = useTypedDispatch()
+    const [ sendInvite, {isSuccess, isError} ] = useSendInviteMutation()
 
     const sendInviteHandler = async () => {
         sendInvite({
             "message": message,
             "recipient_id": user_id
         })
-        onClose()
     }
+
+    useEffect(() => {
+        if(isSuccess){
+            dispatch(showAlert({type: 'success', text: 'Request for cooperation was successfully sent!',}))
+            onClose()
+        }
+        if(isError){
+            dispatch(showAlert({type: 'error', text: 'Failed to send request for cooperation!'}))
+            onClose()
+        }
+      }, [isSuccess, isError])
 
     return(
         <CustomModal onClose={onClose} isOpen={isOpen}>
             <ModalHeader>Invite for cooperation</ModalHeader>
-
+    
             <ModalBody >
                 <FormControl p={2}>
                     <FormLabel>Message:</FormLabel>

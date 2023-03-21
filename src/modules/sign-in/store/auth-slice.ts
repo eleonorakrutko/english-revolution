@@ -26,27 +26,28 @@ export const authSlice = createSlice({
         }
     },
     extraReducers: {
-        [signIn.pending.type]: (state) => {
+        [signIn.pending.type]: (state: AuthState) => {
             state.loading = true
         },
-        [signIn.fulfilled.type]: (state, action) => {
+        [signIn.fulfilled.type]: (state: AuthState, action: PayloadAction<User | null>) => {
             state.user = action.payload
             state.loading = false
             state.error = null
         },
-        [signIn.rejected.type]: (state, action: PayloadAction<string>) => {
+        [signIn.rejected.type]: (state: AuthState, action: PayloadAction<string>) => {
             state.error = action.payload
             state.loading = false
         },
-        [checkAuthorization.pending.type]: (state) => {
+        
+        [checkAuthorization.pending.type]: (state: AuthState) => {
             state.loading = true
         },
-        [checkAuthorization.fulfilled.type]: (state, action) => {
+        [checkAuthorization.fulfilled.type]: (state: AuthState, action: PayloadAction<User | null>) => {
             state.user = action.payload
             state.loading = false
             state.error = null
         },
-        [checkAuthorization.rejected.type]: (state, action: PayloadAction<string>) => {
+        [checkAuthorization.rejected.type]: (state: AuthState, action: PayloadAction<string>) => {
             state.error = action.payload
             state.loading = false
         }

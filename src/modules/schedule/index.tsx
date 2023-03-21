@@ -1,13 +1,12 @@
 import React, {useState} from "react";
-import { CardOfTheDay, AddLessonModal, DaysOfTheWeek, HeaderSchedule } from "./components";
+import { CardOfTheDay, AddLessonModal,  HeaderSchedule } from "./components";
 import { useDisclosure } from '@chakra-ui/react'
 import moment, { Moment } from 'moment'
-import { generateWeek } from "../../helpers/generate-week";
+import { generateWeek } from "../../helpers";
 
 export const ScheduleModule = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [monday, setMonday] = useState<Moment>(moment().startOf('week').add(1, 'days'))
-    console.log(monday)
 
     const setNextWeek = () => {
         setMonday(monday.clone().add(1, 'week'))
@@ -22,8 +21,7 @@ export const ScheduleModule = () => {
             {isOpen && <AddLessonModal isOpen={isOpen} onClose={onClose}/>}
             
             <HeaderSchedule nextWeek={setNextWeek} prevWeek={setPrevWeek} onOpen={onOpen}/>
-            <DaysOfTheWeek week={generateWeek(monday)}/>
-            <CardOfTheDay monday={monday}/>
+            <CardOfTheDay monday={monday} week={generateWeek(monday)} />
         </>
         
     )

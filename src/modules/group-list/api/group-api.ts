@@ -23,11 +23,13 @@ export const groupApi = createApi({
                 providesTags: ['groups']
             }),
             createGroup: build.mutation({
-                query: (groupBody: any) => {
+                query: (groupName: string) => {
                     return {
                         url: '/group',
                         method: 'POST',
-                        body: groupBody,
+                        body: {
+                            "name": groupName
+                        },
                     }
                 },
                 invalidatesTags: ['groups']

@@ -11,8 +11,8 @@ export const assignApi = createApi({
             return headers
         }
     }),
-    tagTypes: ['teachers'],
-    refetchOnMountOrArgChange: true,  //при каждом маунтинге (это когда компонент появляется на экране)
+    tagTypes: ['teachers', 'students', 'groups'],
+    refetchOnMountOrArgChange: true, 
     endpoints: (build) => {
         return {
             assignGroupToTeacher: build.mutation({
@@ -21,16 +21,30 @@ export const assignApi = createApi({
                         url: `/group/${group_id}/teacher/${teacher_id}`,
                         method: 'PATCH'
                     }
-                }
+                },
+                invalidatesTags: ['groups']
             }),
             assignStudentsToTeacher: build.mutation({
                 query: (body) => {
                     return{
                         url: '/school/teacher/assign/students',
                         method: 'POST',
-                        body: body
+                        body,
                     }
-                }
+                },
+                invalidatesTags: ['students']
+            }),
+            getStudentForAssign: build.query({
+                query: (teacher_id) => {
+                    return `/student/assign/${teacher_id}`
+                },
+                providesTags:['students']
+            }),
+            getGroupForAssign: build.query({
+                query: (teacher_id) => {
+                    return `/group/assign/${teacher_id}`
+                },
+                providesTags:['groups']
             })
         }
     }
@@ -39,4 +53,6 @@ export const assignApi = createApi({
 export const {
     useAssignGroupToTeacherMutation,
     useAssignStudentsToTeacherMutation,
+    useGetStudentForAssignQuery,
+    useGetGroupForAssignQuery
 } = assignApi

@@ -13,7 +13,7 @@ export const Navigation = () => {
     const navItems = getNavItemsByRole(user?.role_type as RolesEnum)
 
     return(
-        <Wrap w='16.5%' position='fixed'>
+        <Wrap className={styles.wrapper} >
             <Box className={styles.wrapperText}>
                 <Text color='black'>Revolution</Text>
                 <Text color='purple.600' pl={2}>English!</Text>

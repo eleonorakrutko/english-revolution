@@ -2,10 +2,11 @@ import React from "react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 import { RadioCardGroup } from "../../../../components/radio-card-group";
 import styles from './sign-up-radio-form-control.module.css'
+import { RolesEnum } from "../../../../types/roles-enum";
 
 type Props = {
     options: string[]
-    setChoosedOption: any
+    setChoosedOption: (value: RolesEnum) => void
 }
 
 export const RadioFormControl = ({options, setChoosedOption}: Props) => {

@@ -1,18 +1,19 @@
-import { Flex, Text, useDisclosure } from "@chakra-ui/react";
+import { ButtonGroup, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { List } from "../../../../components";
-import { CustomSpinner } from "../../../../ui";
-import { useGetNewStudentsQuery, useGetNewTeachersQuery } from "../../../../modules/cooperation/api/cooperation-api"; 
-import { InviteModal } from "../../../../modules/cooperation/components/modal/invite-modal"; 
+import { CustomButton, CustomSpinner } from "../../../../ui";
+import { InviteModal } from "../../components/modal/invite-modal"; 
 import styles from './index.module.css'
+import { useGetNewStudentsQuery, useGetNewTeachersQuery } from "../../api/cooperations-api";
 
 
 export const SchoolCooperationModule = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [userId, setUserId] = useState<number | null>(null)
+    const [type, setType] = useState<string>('students')
  
-    const {data: newStudents, isFetching} = useGetNewStudentsQuery('')
+    const {data: newStudents, isFetching: isFetchingNewStudents} = useGetNewStudentsQuery('')
     const {data: newTeachers, isFetching: isFetchingNewTeachers} = useGetNewTeachersQuery('')
    
     const openInviteModal = (user_id: number) => {
@@ -27,6 +28,21 @@ export const SchoolCooperationModule = () => {
                     <Text ml='5px'>Outgoing cooperations</Text>
                 </Flex>
             </NavLink>
+
+            <Flex justify='center' mt={3}>
+                <ButtonGroup>
+                    <CustomButton 
+                        text='New students' 
+                        callback={() => setType('students')}
+                        variant={type === 'students'? 'solid' : 'outline'} 
+                    />
+                    <CustomButton 
+                        text='New teachers' 
+                        callback={() => setType('teachers')}
+                        variant={type === 'teachers'? 'solid' : 'outline'}
+                    />
+                </ButtonGroup>
+            </Flex>
             
             {isOpen && 
                 <InviteModal 
@@ -36,10 +52,9 @@ export const SchoolCooperationModule = () => {
                 />
             }
 
-      
-            <Flex justify='space-around' mt={5}>
-                <Flex direction='column' w='45%'>
-                    {isFetching?
+            {(type === 'students') && 
+                <Flex direction='column' mt={2}>
+                    {isFetchingNewStudents?
                         <CustomSpinner/>
                         :
                         <>
@@ -48,7 +63,10 @@ export const SchoolCooperationModule = () => {
                         </>
                     }
                 </Flex>
-                <Flex direction='column' w='45%'>
+            }
+
+            {(type === 'teachers') &&
+                <Flex direction='column' mt={2}>
                     {isFetchingNewTeachers?
                         <CustomSpinner/>
                         :
@@ -58,7 +76,7 @@ export const SchoolCooperationModule = () => {
                         </>
                     }
                 </Flex>
-            </Flex>  
+            }
         </>
     )
 }

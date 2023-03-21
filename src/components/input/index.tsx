@@ -7,7 +7,8 @@ type Props = {
     value: string, 
     placeholder?: string, 
     focusBorderColor?: string,
-    borderColor? : string, 
+    borderColor? : string,
+    name? : string, 
     type?: string, 
     minH?: string,
     validationOptions?: ValidationOptions,
@@ -20,13 +21,14 @@ export const CustomInput = ({
     validationOptions = {}, 
     placeholder, 
     borderColor,
+    name,
     focusBorderColor = 'purple.600', 
     type = 'text', 
     minH = '80px',
     onChangeCallback, 
     validateCallback
 }: Props) => {
-        const [isValid, setIsValid] = useState(true)
+        const [isValid, setIsValid] = useState<boolean>(true)
         const [errorMessages, setErrorMessages] = useState<string[]>([])
 
         const validateInput = () => {
@@ -42,6 +44,7 @@ export const CustomInput = ({
             <Flex minH={minH} flexDirection='column' align='center' wrap='wrap'>
                 <Input 
                     value={value}
+                    name={name}
                     borderColor={borderColor}
                     isInvalid={!isValid}
                     placeholder={placeholder} 

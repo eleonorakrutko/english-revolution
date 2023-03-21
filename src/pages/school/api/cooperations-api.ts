@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import CookiesService from '../../../services/cookie-service'
 
-export const cooperationsApi = createApi({
-    reducerPath: 'coopeartionsApi',
-    baseQuery: fetchBaseQuery({ //скелет для запросов
+export const schoolCooperationsApi = createApi({
+    reducerPath: 'schoolCoopeartionsApi',
+    baseQuery: fetchBaseQuery({ 
         baseUrl: process.env.REACT_APP_API_BASE_URL,
         prepareHeaders: (headers) => {
             headers.set('Authorization', `Bearer ${CookiesService.getAuthorizationToken()}`)
@@ -11,7 +11,7 @@ export const cooperationsApi = createApi({
             return headers
         }
     }),
-    tagTypes: ['cooperations'],
+    tagTypes: ['schoolCooperations'],
     refetchOnMountOrArgChange: true,
     endpoints: (build) => {
         return {
@@ -28,13 +28,8 @@ export const cooperationsApi = createApi({
             getOutgoingCooperations: build.query({
                 query: (query: string) => {
                     return `/cooperation/outgoing?${query}`
-                }
-            }),
-            getIncomingCooperations: build.query({
-                query: (query: string) => {
-                    return `/cooperation/incoming?${query}`
                 },
-                providesTags: ['cooperations']
+                providesTags: ['schoolCooperations']
             }),
             sendInvite: build.mutation({
                 query: (inviteBody) => {
@@ -44,20 +39,8 @@ export const cooperationsApi = createApi({
                         body: inviteBody,
                     }
                 },
-                invalidatesTags: ['cooperations']
+                invalidatesTags: ['schoolCooperations']
             }),
-            makeDecision: build.mutation({
-                query: ({id, status}: {id: number | null, status: string}) => {
-                    return{
-                        url: `/cooperation/${id}/status`,
-                        method: 'PATCH',
-                        body: {
-                            status
-                        }
-                    }
-                },
-                invalidatesTags: ['cooperations']
-            })
         }
     }
 })
@@ -66,7 +49,5 @@ export const {
     useGetNewStudentsQuery,
     useGetNewTeachersQuery,
     useGetOutgoingCooperationsQuery,
-    useGetIncomingCooperationsQuery,
     useSendInviteMutation,
-    useMakeDecisionMutation,
-} = cooperationsApi
+} = schoolCooperationsApi

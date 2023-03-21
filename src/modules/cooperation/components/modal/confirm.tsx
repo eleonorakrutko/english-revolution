@@ -1,8 +1,10 @@
 import { ModalFooter, ModalHeader} from '@chakra-ui/react'
-import React from 'react'
+import React, {useEffect} from 'react'
+import { useTypedDispatch } from '../../../../common/hooks/useTypedDispatch'
 import { RequestForCooperationStatus } from '../../../../types/request-for-cooperation-status'
 import { CustomButton, CustomModal } from '../../../../ui'
-import { useMakeDecisionMutation } from '../../api/cooperation-api'
+import { showAlert } from '../../../layout/store/alert-slice'
+import { useMakeDecisionMutation } from '../../api/cooperations-api'
 
 type Props = {
     onClose: () => void,
@@ -12,15 +14,25 @@ type Props = {
 }
 
 export const ConfirmModal = ({ onClose, isOpen, id, status }: Props) => {
-    const [makeDecision] = useMakeDecisionMutation()
-
-    const makeDecisionHandler = async () => {
+    const [ makeDecision, {isSuccess, isError} ] = useMakeDecisionMutation()
+    const dispatch = useTypedDispatch()
+    const makeDecisionHandler = () => {
         makeDecision({
             id,
             status
         })
-        onClose()
     }
+
+    useEffect(() => {
+        if(isSuccess){
+            dispatch(showAlert({type: 'success', text: `Request for cooperation was successfully ${status.toLowerCase()}!`}))
+            onClose()
+        }
+        if(isError){
+            dispatch(showAlert({type: 'error', text: 'Failed to make decision'}))
+            onClose()
+        }
+      }, [isSuccess, isError])
 
     return(
         <CustomModal isOpen={isOpen} onClose={onClose}>

@@ -1,10 +1,9 @@
-import { OutgoingCooperations, SchoolCooperation, StudentCooperation } from './../pages';
+import { OutgoingCooperations, SchoolCooperation, StudentCooperation, TeacherDetails } from './../pages';
 import { MdEvent, MdPersonAdd, MdLayers, MdFormatListBulleted, MdPeople, MdPeopleOutline, MdAccountCircle, MdContactMail } from '../components/icons';
 import { AssignTeacherToStudents, TeachersList, ActiveHomeworks, GroupDetails, GroupList, StudentList, Schedule, Profile } from '../pages';
 import { RolesEnum } from './../types/roles-enum';
 import { IconType } from 'react-icons';
 import { TeacherCooperation } from '../pages/teacher';
-
 
 
 export interface INavigationItem {
@@ -16,7 +15,7 @@ export interface INavigationItem {
     customIcon?: IconType | undefined,
   }
   
-export const getPagesByRole = (roleType: RolesEnum | null): any => {
+export const getPagesByRole = (roleType: RolesEnum | null) => {
     const filteredNavSetup = navigationSetup.filter(item => roleType === item.roleType)
     return filteredNavSetup.map(({page, path}) => ({page, path}))
 }
@@ -38,7 +37,6 @@ const navigationSetup: INavigationItem[] = [
     {path: '/cooperation', page: TeacherCooperation, roleType: RolesEnum.TEACHER, title: 'Cooperation', shouldShowInNav: true, customIcon: MdContactMail},
     {path: '/cooperation', page: SchoolCooperation, roleType: RolesEnum.SCHOOL_SUPER_ADMIN, title: 'Cooperation', shouldShowInNav: true, customIcon: MdContactMail},
 
-    // {path: '/active-homeworks', page: ActiveHomeworks, roleType: RolesEnum.STUDENT, title: 'Active homeworks', shouldShowInNav: true, customIcon: MdLayers},
     
     {path: '/student-list', page: StudentList, roleType: RolesEnum.TEACHER, title: 'Students', shouldShowInNav: true, customIcon: MdPeopleOutline},
     {path: '/student-list', page: StudentList, roleType: RolesEnum.SCHOOL_SUPER_ADMIN, title: 'Students', shouldShowInNav: true, customIcon: MdPeopleOutline},
@@ -54,4 +52,6 @@ const navigationSetup: INavigationItem[] = [
     {path: '/assign-teacher-to-students', page: AssignTeacherToStudents, roleType: RolesEnum.SCHOOL_SUPER_ADMIN, title: 'Assign teacher', shouldShowInNav: true, customIcon: MdPersonAdd},
 
     {path: '/outgoing-cooperations', page: OutgoingCooperations, roleType: RolesEnum.SCHOOL_SUPER_ADMIN, title: 'Outgoing cooperations', shouldShowInNav: false},
+
+    {path: '/teacher-details/:id', page: TeacherDetails, roleType: RolesEnum.SCHOOL_SUPER_ADMIN, title: 'Teacher details', shouldShowInNav: false},
 ]

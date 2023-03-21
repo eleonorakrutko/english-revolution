@@ -1,46 +1,77 @@
-import React, { useState } from "react"
-import { ModalFooter, ModalHeader, ModalBody, FormControl, FormLabel, Stack, Checkbox, Text, ButtonGroup } from '@chakra-ui/react'
-import { CustomButton, CustomInput, CustomModal } from "../../../../../ui"
+import React, { useState, useEffect } from "react"
+import { ModalFooter, ModalHeader, ModalBody, Stack, Checkbox, Text, ButtonGroup, Flex } from '@chakra-ui/react'
+import { CustomButton, CustomModal } from "../../../../../ui"
 import { validate } from "../../../../../helpers"
 import styles from './index.module.css'
 import { useCreateLessonMutation, useGetGroupsQuery, useGetStudentsQuery } from "../../../api/schedule-api"
+import { CustomInput } from "../../../../../components"
+import { useInputsForm } from "../../../../../common/hooks/useInputsForm"
+import { Person } from "../../../../../types/person"
+import { Group } from "../../../../../types/group"
+import { useTypedDispatch } from "../../../../../common/hooks/useTypedDispatch"
+import { showAlert } from "../../../../layout/store/alert-slice"
 
-type Props = {isOpen: boolean, onClose: () => void}
+type Props = {
+  isOpen: boolean, 
+  onClose: () => void
+}
+
+interface CreateLessonData {
+  title: string,
+  date_from: string,
+  date_to: string,
+  online_meeting_link: string,
+}
 
 export const AddLessonModal = ({isOpen, onClose}: Props) =>  {
-  const [studentInputValue, setStudentInputValue] = useState('')
-  const [choosedStudentId, setChoosedStudentId] = useState('')
-  const [title, setTitle] = useState('')
-  const [date_from, setDateFrom] = useState('')
-  const [date_to, setDateTo] = useState('')
-  const [meetingLink, setMeetingLink] = useState('')
-  const [choosedType, setChoosedType] = useState('')
-  const [choosedGroupId, setChoosedGroupId] = useState('')
+  const [studentInputValue, setStudentInputValue] = useState<string>('')
+  const [choosedStudentId, setChoosedStudentId] = useState<number | null>(null)
+  const [choosedGroupId, setChoosedGroupId] = useState<number | null>(null)
+  const [choosedType, setChoosedType] = useState('student')
+  const [inputData, onChangeInputData] = useInputsForm<CreateLessonData>({
+    title: '',
+    date_from: '',
+    date_to: '',
+    online_meeting_link: ''
+  })
 
-  const [createLesson] = useCreateLessonMutation()
+  const dispatch = useTypedDispatch()
+
+  const [createLesson, {isSuccess, isError}] = useCreateLessonMutation()
+
   const {data: students} = useGetStudentsQuery(studentInputValue)
   const {data: groups} = useGetGroupsQuery('')
 
-  const createLessonHandler = () => {
-    if(choosedType && choosedType === 'student'){
-      createLesson({
-        "student_id": Number(choosedStudentId),
-        "title": title,
-        "date_from": date_from,
-        "date_to": date_to,
-        "online_meeting_link": meetingLink
-      })
-      onClose()
+  useEffect(() => {
+    if(isSuccess){
+        dispatch(showAlert({type: 'success', text: 'Lesson was successfully created!',}))
+        onClose()
     }
-    if(choosedType && choosedType === 'group'){
+    if(isError){
+        dispatch(showAlert({type: 'error', text: 'Failed to create lesson!'}))
+        onClose()
+    }
+}, [isSuccess, isError])
+
+  const createLessonHandler = () => {
+    const {title, date_from, date_to, online_meeting_link} = inputData
+    if(choosedType === 'student'){
       createLesson({
-          "group_id": Number(choosedGroupId),
-          "title": title,
-          "date_from": date_from,
-          "date_to": date_to,
-          "online_meeting_link": meetingLink
+        "student_id": choosedStudentId,
+        title,
+        date_from,
+        date_to,
+        online_meeting_link
       })
-      onClose()
+    }
+    if(choosedType === 'group'){
+      createLesson({
+          "group_id": choosedGroupId,
+          title,
+          date_from,
+          date_to,
+          online_meeting_link
+      })
     }
   }
 
@@ -48,24 +79,34 @@ export const AddLessonModal = ({isOpen, onClose}: Props) =>  {
     <CustomModal isOpen={isOpen} onClose={onClose}>
         <ModalHeader>Add Lesson</ModalHeader>
         <ModalBody>
-          <FormControl p={2}>
-            <FormLabel>Title</FormLabel>
+          <Flex p={2} direction='column'>
+            <Text as='b' mb={2}>Title</Text>
             <CustomInput 
-              value={title} 
+              value={inputData.title} 
+              name='title'
               minH='50px'
               placeholder='Enter title' 
-              onChangeCallback={e => setTitle(e.target.value)}
-              validateCallback={() => validate(title, {minLength: 2})}
+              onChangeCallback={onChangeInputData}
+              validateCallback={() => validate(inputData.title, {minLength: 2})}
             />
-          </FormControl>
+          </Flex>
 
           <ButtonGroup display='flex' justifyContent='center' p={2}>
-            <CustomButton text="Student" variant="outline" callback={() => setChoosedType('student')}/>
-            <CustomButton text="Group" variant="outline" callback={() => setChoosedType('group')}/>
+            <CustomButton 
+              text="Student" 
+              variant={choosedType === 'student'? 'solid' : 'outline'} 
+              callback={() => setChoosedType('student')}
+            />
+            <CustomButton 
+              text="Group" 
+              variant={choosedType === 'group'? 'solid' : 'outline'}  
+              callback={() => setChoosedType('group')}
+            />
           </ButtonGroup>
-          {(choosedType && choosedType === 'student') &&
-            <FormControl p={2}>
-              <FormLabel>Student</FormLabel>
+
+          {(choosedType === 'student') &&
+            <Flex p={2} direction='column'>
+              <Text as='b' mb={2}>Student</Text>
               <CustomInput 
                 value={studentInputValue}
                 minH='50px'
@@ -73,10 +114,10 @@ export const AddLessonModal = ({isOpen, onClose}: Props) =>  {
                 onChangeCallback={e => setStudentInputValue(e.target.value)}
                 validateCallback={() => validate(studentInputValue, {minLength: 1})}
               />
-              { (students && students.length) ?
-                <Stack className={styles.wrapperStudentList} >
-                  <Stack className={styles.studentList}>
-                    { students.map(({first_name, last_name, user_role_id}: any) => 
+                {(students && students.length) ?
+                  <Stack className={styles.wrapperStudentList} >
+                    <Stack className={styles.studentList}>
+                      { students.map(({first_name, last_name, user_role_id}: Person) => 
                           <Checkbox 
                             isChecked={choosedStudentId === user_role_id} 
                             onChange={() =>  {
@@ -90,68 +131,76 @@ export const AddLessonModal = ({isOpen, onClose}: Props) =>  {
                           </Checkbox>
                         )
                       }
+                    </Stack>
                   </Stack>
-                  
+                  :
+                  <>
+                    {(students && !students.length) && <Text textAlign='center' color='red.500'>User not found</Text>}
+                  </>
+                } 
+              </Flex>
+          }
+
+          {(choosedType === 'group') &&
+            <>
+              {groups.length ? 
+                <Stack className={styles.wrapperStudentList} >
+                  <Stack className={styles.studentList}>
+                    { groups.map(({name, id}: Group) => 
+                        <Checkbox 
+                          isChecked={choosedGroupId === id} 
+                          onChange={() =>  {
+                            setChoosedGroupId(id)
+                          }} 
+                          colorScheme='purple' 
+                          key={id} 
+                          value={id}>
+                            {name}
+                        </Checkbox>
+                      )
+                    }
+                  </Stack>
                 </Stack>
                 :
-                <>
-                  {(students && !students.length) && <Text textAlign='center' color='red.500'>User not found</Text>}
-                </>
-              } 
-            </FormControl>
-          }
-
-          {(choosedType && choosedType === 'group') &&
-            <Stack className={styles.wrapperStudentList} >
-            <Stack className={styles.studentList}>
-              { groups?.map(({name, id}: any) => 
-                    <Checkbox 
-                      isChecked={choosedGroupId === id} 
-                      onChange={() =>  {
-                        setChoosedGroupId(id)
-                      }} 
-                      colorScheme='purple' 
-                      key={id} 
-                      value={id}>
-                        {name}
-                    </Checkbox>
-                  )
-                }
-            </Stack>
-             
-          </Stack>
+                <Text textAlign='center' color='red.500'>You don't have groups</Text>
+              }
+            </>
+            
           }
             
-          <FormControl p={2}>
-            <FormLabel>Date from</FormLabel>
+          <Flex p={2} direction='column'>
+            <Text as='b' mb={2}>Date from</Text>
             <CustomInput 
-              value={date_from}
+              value={inputData.date_from}
+              name='date_from'
               type="datetime-local"
               minH='50px' 
-              onChangeCallback={e => setDateFrom(e.target.value)}
-              validateCallback={() => validate(date_from, {isBefore: date_to})} 
+              onChangeCallback={onChangeInputData}
+              validateCallback={() => validate(inputData.date_from, {isBefore: inputData.date_to})} 
             />
-          </FormControl>
+          </Flex>
           
-          <FormControl p={2}>
-            <FormLabel>Date to</FormLabel>
+          <Flex p={2} direction='column'>
+            <Text as='b' mb={2}>Date to</Text>
             <CustomInput 
-              value={date_to}
+              value={inputData.date_to}
+              name='date_to'
               type="datetime-local" 
               minH='50px'
-              onChangeCallback={e => setDateTo(e.target.value)}
-              validateCallback={() => validate(date_to, {isAfter: date_from})}
+              onChangeCallback={onChangeInputData}
+              validateCallback={() => validate(inputData.date_to, {isAfter: inputData.date_from})}
             />
-          </FormControl>
+          </Flex>
 
-          <FormControl p={2}>
-            <FormLabel>Online meeting link</FormLabel>
+          <Flex p={2} direction='column'>
+            <Text as='b' mb={2}>Online meeting link</Text>
             <CustomInput 
-              value={meetingLink}
+              value={inputData.online_meeting_link}
+              name='online_meeting_link'
               minH='50px'
-              onChangeCallback={e => setMeetingLink(e.target.value)}
+              onChangeCallback={onChangeInputData}
               />
-          </FormControl>
+          </Flex>
           
         </ModalBody>
 

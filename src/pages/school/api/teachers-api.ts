@@ -11,7 +11,7 @@ export const teachersApi = createApi({
             return headers
         }
     }),
-    tagTypes: ['teachers'],
+    tagTypes: ['teachers', 'teacher'],
     refetchOnMountOrArgChange: true,  //при каждом маунтинге (это когда компонент появляется на экране)
     endpoints: (build) => {
         return {
@@ -29,7 +29,33 @@ export const teachersApi = createApi({
                     }
                 },
                 invalidatesTags: ['teachers']
-            })
+            }),
+            getTeacherDetails: build.query({
+                query: (id) => {
+                    return `/teacher/details/${id}`
+                },
+                providesTags: ['teacher']
+            }),
+            deleteStudentFromTeacher: build.mutation({
+                query: (body) => {
+                    return {
+                        url: '/school/student/delete/from',
+                        method:'DELETE',
+                        body: body
+                    }
+                },
+                invalidatesTags: ['teacher']
+            }),
+            deleteGroupFromTeacher: build.mutation({
+                query: (body) => {
+                    return {
+                        url: '/school/group/delete/from',
+                        method:'DELETE',
+                        body: body
+                    }
+                },
+                invalidatesTags: ['teacher']
+            }),
         }
     }
 })
@@ -37,4 +63,7 @@ export const teachersApi = createApi({
 export const {
     useGetTeachersQuery,
     useDeleteTeachersMutation,
+    useGetTeacherDetailsQuery,
+    useDeleteStudentFromTeacherMutation,
+    useDeleteGroupFromTeacherMutation
 } = teachersApi

@@ -1,0 +1,12 @@
+.navigateButton{
+    font-weight: bold;
+    padding: 8px;
+    border-radius: 20px;
+    margin: 3px;
+    background-color: #D6BCFA;
+}
+
+.navigateButton:hover{
+    background-color: #B794F4;
+    transition: 0.3s;
+}

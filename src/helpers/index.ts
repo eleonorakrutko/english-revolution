@@ -1,2 +1,2 @@
-export * from './combineClasses'
-export * from './validate/index'
+export * from './generate-week'
+export * from './validate'

@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, ChangeEvent } from 'react';
 import { Wrap, Box, Modal, ModalContent, ModalHeader, ModalCloseButton, ModalBody, useDisclosure, Text } from '@chakra-ui/react';
 import styles from './sign-in-form.module.css'
-import { CustomButton, CustomInput } from '../../../ui';
+import { CustomButton } from '../../../ui';
 import { useNavigate } from 'react-router-dom';
 import {useState} from 'react'
 import { validate } from '../../../helpers';
@@ -9,24 +9,28 @@ import { signIn } from '../store/action-creators';
 import { useTypedDispatch } from '../../../common/hooks/useTypedDispatch';
 import { useTypedSelector } from '../../../common/hooks/useTypedSelector';
 import { RolesEnum } from '../../../types/roles-enum';
+import { CustomInput } from '../../../components';
+import { useInputsForm } from '../../../common/hooks/useInputsForm';
 
-interface IMessageError{
-    isError: boolean,
-    errorMessage: string
+interface SignInData{
+    email: string,
+    password: string,
 }
 
 export const SignInForm = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [isErrorBorder, setIsErrorBorder] = useState(false)
+    const [isErrorBorder, setIsErrorBorder] = useState<boolean>(false)
+    const [inputData, onChangeInputData] = useInputsForm<SignInData>({
+        email: '',
+        password: ''
+    })
+
+    const navigate = useNavigate()
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const dispatch = useTypedDispatch()
     const { user, error } = useTypedSelector(state => state.authReducer)
 
-
-    const navigate = useNavigate()
     const moveToSignUp = () => {
         navigate('/sign-up')
     }
@@ -46,9 +50,14 @@ export const SignInForm = () => {
     }, [user, error])
 
     const onSubmit = () => {
+        const {email, password} = inputData
         dispatch(signIn({email, password}))
     }
 
+    const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setIsErrorBorder(false)
+        onChangeInputData(event)
+    }
 
     return (
         <>
@@ -67,26 +76,22 @@ export const SignInForm = () => {
             <Box className={styles.container}>
                 <Wrap className={styles.wrapper} direction='column' w='700px' h='555px'>
                     <CustomInput 
+                        value={inputData.email}
                         borderColor={isErrorBorder? 'red.400' : 'gray.200'}
-                        value={email} 
+                        name='email'
                         placeholder='Email' 
                         type='email' 
-                        onChangeCallback={({target}) => {
-                            setIsErrorBorder(false)
-                            setEmail(target.value)
-                        }}
-                        validateCallback={() => validate(email, {isEmail: true})}
+                        onChangeCallback={onInputChange}
+                        validateCallback={() => validate(inputData.email, {isEmail: true})}
                     />
                     <CustomInput 
-                        value={password} 
+                        value={inputData.password}
+                        name='password'
                         borderColor={isErrorBorder? 'red.400' : 'gray.200'}
                         placeholder='Password' 
                         type='password' 
-                        onChangeCallback={({target}) => {
-                            setIsErrorBorder(false)
-                            setPassword(target.value)
-                        }}
-                        validateCallback={() => validate(password, {minLength: 6, maxLength: 16})}
+                        onChangeCallback={onInputChange}
+                        validateCallback={() => validate(inputData.password, {minLength: 6, maxLength: 16})}
                     />
                     <CustomButton text='Sign in' callback={onSubmit}/>
                     <CustomButton variant='outline' text='Sign up' callback={moveToSignUp}/>

@@ -1,15 +1,17 @@
 import { Flex, Link, ModalBody, ModalFooter, ModalHeader, Text } from "@chakra-ui/react";
-import React from "react";
+import React, {useEffect} from "react";
 import { RolesEnum } from "../../../../../types/roles-enum";
 import { CustomButton, CustomModal, CustomSpinner } from "../../../../../ui";
 import moment from 'moment'
 import { useDeleteLessonMutation, useGetLessonDetailsQuery } from "../../../api/schedule-api";
 import { useTypedSelector } from "../../../../../common/hooks/useTypedSelector";
+import { showAlert } from "../../../../layout/store/alert-slice";
+import { useTypedDispatch } from "../../../../../common/hooks/useTypedDispatch";
 
 type Props = {
     isOpen: boolean, 
     onClose: () => void,
-    id: number,
+    id: number | null,
 }
 
 export const LessonDetailModal = ({isOpen, onClose, id}: Props) => {
@@ -17,14 +19,24 @@ export const LessonDetailModal = ({isOpen, onClose, id}: Props) => {
 
     const {data: lessonDetails, isFetching} = useGetLessonDetailsQuery(id)
 
-    const [deleteLesson] = useDeleteLessonMutation()
+    const [deleteLesson , {isSuccess, isError}] = useDeleteLessonMutation()
+    const dispatch = useTypedDispatch()
 
     const deleteLessonHandler = async () => {
         deleteLesson(id)
-        onClose()
     } 
 
-    console.log(lessonDetails)
+    useEffect(() => {
+        if(isSuccess){
+            dispatch(showAlert({type: 'success', text: 'Lesson was successfully deleted!',}))
+            onClose()
+        }
+        if(isError){
+            dispatch(showAlert({type: 'error', text: 'Failed to delete lesson!'}))
+            onClose()
+        }
+    }, [isSuccess, isError])
+
     return(
         <CustomModal isOpen={isOpen} onClose={onClose}>
             <ModalHeader>Lesson detail</ModalHeader>
