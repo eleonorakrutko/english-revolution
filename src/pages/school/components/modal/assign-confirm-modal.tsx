@@ -2,7 +2,6 @@ import { ModalBody, ModalFooter, ModalHeader, Text} from "@chakra-ui/react";
 import React from "react";
 import { CustomButton, CustomModal } from "../../../../ui"
 
-
 type Props = {
     onClose: () => void,
     isOpen: boolean,
@@ -10,8 +9,7 @@ type Props = {
 }
 
 export const AssignConfirmModal = ({ onClose, isOpen, assignCallback }: Props) => {
-    
-    const assignHandler = async () => {
+    const assignHandler = () => {
         assignCallback()
         onClose()
     }

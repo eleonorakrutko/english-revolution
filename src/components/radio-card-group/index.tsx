@@ -9,25 +9,24 @@ type Props = {
 }
 
 export const RadioCardGroup = ({options, setChoosedOption}: Props) => {
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name: 'role',
+    defaultValue: options[0],
+    onChange: (value) => setChoosedOption(value as RolesEnum) 
+  })
   
-    const { getRootProps, getRadioProps } = useRadioGroup({
-      name: 'role',
-      defaultValue: options[0],
-      onChange: (value) => setChoosedOption(value as RolesEnum) 
-    })
+  const group = getRootProps()
   
-    const group = getRootProps()
-  
-    return (
-      <HStack {...group}>
-        {options.map((value, index) => {
-          const radio = getRadioProps({ value })
-          return (
-            <RadioCard key={value} {...radio}>
-              { RolesTitleEnum[index] }
-            </RadioCard>
-          )
-        })}
-      </HStack>
-    )
+  return (
+    <HStack {...group}>
+      {options.map((value, index) => {
+        const radio = getRadioProps({ value })
+        return (
+          <RadioCard key={value} {...radio}>
+            { RolesTitleEnum[index] }
+          </RadioCard>
+        )
+      })}
+    </HStack>
+  )
 }

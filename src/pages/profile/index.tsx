@@ -1,8 +1,8 @@
 import React from "react";
-import { ProfileModule } from "../../modules";
+import { ProfileComponent } from "../../components";
 
 export const Profile = () => {
     return(
-       <ProfileModule/>
+       <ProfileComponent/>
     )
 }

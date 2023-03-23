@@ -2,13 +2,15 @@ import React from 'react'
 import { Grid, GridItem, useMediaQuery } from '@chakra-ui/react'
 import { Outlet } from 'react-router-dom'
 import { Header, Navigation, CustomAlert } from '../../components'
-import { useTypedSelector } from '../../common/hooks/useTypedSelector'
+import { useTypedSelector } from '../../hooks/useTypedSelector'
 
 export const Layout = () => {
-    const {isShow} = useTypedSelector((state) => state.alertReducer)
     const [isLargerThan426] = useMediaQuery([
         '(min-width: 426px)'
     ])
+
+    const {isShow} = useTypedSelector(state => state.alertReducer)
+    
     return(
         <>
             {isShow && 
@@ -30,7 +32,8 @@ export const Layout = () => {
                     <Navigation/>
                 </GridItem>
                 <GridItem area={'main'} p={6} bg='white'>
-                    <Outlet/>
+                    <Outlet/>  
+                    {/* заменяется на вложенные роуты в app-route */}
                 </GridItem>
             </Grid>
         </>

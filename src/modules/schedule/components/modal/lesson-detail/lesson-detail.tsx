@@ -4,9 +4,9 @@ import { RolesEnum } from "../../../../../types/roles-enum";
 import { CustomButton, CustomModal, CustomSpinner } from "../../../../../ui";
 import moment from 'moment'
 import { useDeleteLessonMutation, useGetLessonDetailsQuery } from "../../../api/schedule-api";
-import { useTypedSelector } from "../../../../../common/hooks/useTypedSelector";
+import { useTypedSelector } from "../../../../../hooks/useTypedSelector";
 import { showAlert } from "../../../../layout/store/alert-slice";
-import { useTypedDispatch } from "../../../../../common/hooks/useTypedDispatch";
+import { useTypedDispatch } from "../../../../../hooks/useTypedDispatch";
 
 type Props = {
     isOpen: boolean, 
@@ -16,15 +16,11 @@ type Props = {
 
 export const LessonDetailModal = ({isOpen, onClose, id}: Props) => {
     const { user } = useTypedSelector(state => state.authReducer)
+    const dispatch = useTypedDispatch()
 
     const {data: lessonDetails, isFetching} = useGetLessonDetailsQuery(id)
 
     const [deleteLesson , {isSuccess, isError}] = useDeleteLessonMutation()
-    const dispatch = useTypedDispatch()
-
-    const deleteLessonHandler = async () => {
-        deleteLesson(id)
-    } 
 
     useEffect(() => {
         if(isSuccess){
@@ -36,6 +32,10 @@ export const LessonDetailModal = ({isOpen, onClose, id}: Props) => {
             onClose()
         }
     }, [isSuccess, isError])
+
+    const deleteLessonHandler = () => {
+        deleteLesson(id)
+    } 
 
     return(
         <CustomModal isOpen={isOpen} onClose={onClose}>
@@ -100,33 +100,30 @@ export const LessonDetailModal = ({isOpen, onClose, id}: Props) => {
                             {lessonDetails.online_meeting_link && 
                                 <Flex fontSize='lg' p={2}>
                                     <Text as='b'>Online meeting link:</Text>
-                                    <Link href='https://www.google.com/' ml={2}>{lessonDetails.online_meeting_link}</Link>
+                                    <Link href={lessonDetails.online_meeting_link} ml={2}>{lessonDetails.online_meeting_link}</Link>
                                 </Flex>
                             }
-        
                         </Flex>
                     }
                 </ModalBody>
             }
-            
 
             <ModalFooter>
                 <Flex justify='space-between' w='100%'>
-                {user?.role_type !== RolesEnum.STUDENT && 
+                    {user?.role_type === RolesEnum.TEACHER && 
+                        <CustomButton 
+                            text="Delete" 
+                            colorSheme="red"
+                            callback={deleteLessonHandler}
+                            p={5}
+                        />
+                    }
                     <CustomButton 
-                        text="Delete" 
-                        colorSheme="red"
-                        callback={deleteLessonHandler}
+                        text="Close" 
+                        variant="outline"
+                        callback={onClose}
                         p={5}
                     />
-                }
-                
-                <CustomButton 
-                    text="Close" 
-                    variant="outline"
-                    callback={onClose}
-                    p={5}
-                />
                 </Flex>
                 
             </ModalFooter>

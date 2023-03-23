@@ -28,36 +28,38 @@ export const CustomInput = ({
     onChangeCallback, 
     validateCallback
 }: Props) => {
-        const [isValid, setIsValid] = useState<boolean>(true)
-        const [errorMessages, setErrorMessages] = useState<string[]>([])
+    const [isValid, setIsValid] = useState<boolean>(true)
+    const [errorMessages, setErrorMessages] = useState<string[]>([])
 
-        const validateInput = () => {
-            if(validateCallback){
-                const {isValid, errorMessages} = validateCallback(value, validationOptions);
-                setIsValid(isValid)
-                setErrorMessages(errorMessages)
-            }
+    const validateInput = () => {
+        if(validateCallback){
+            const {isValid, errorMessages} = validateCallback(value, validationOptions);
+            setIsValid(isValid)
+            setErrorMessages(errorMessages)
         }
-        
+    }  
       
-        return (
-            <Flex minH={minH} flexDirection='column' align='center' wrap='wrap'>
-                <Input 
-                    value={value}
-                    name={name}
-                    borderColor={borderColor}
-                    isInvalid={!isValid}
-                    placeholder={placeholder} 
-                    focusBorderColor={focusBorderColor} 
-                    size='lg' 
-                    variant='outline' 
-                    type={type} 
-                    onChange={onChangeCallback}
-                    onBlur={validateInput}
-                    onClick={() => setIsValid(true)}
-                />
-                {!isValid && <Text m='5px' fontSize='14px' as='b' color='red.400'>{errorMessages.join(', ')}</Text>}
-            </Flex>
-           
-        );
+    return (
+        <Flex minH={minH} flexDirection='column' align='center' wrap='wrap'>
+            <Input 
+                value={value}
+                name={name}
+                borderColor={borderColor}
+                isInvalid={!isValid}
+                placeholder={placeholder} 
+                focusBorderColor={focusBorderColor} 
+                size='lg' 
+                variant='outline' 
+                type={type} 
+                onChange={onChangeCallback}
+                onBlur={validateInput}
+                onClick={() => setIsValid(true)}
+            />
+            {!isValid && 
+                <Text m='5px' fontSize='14px' as='b' color='red.400'>
+                    {errorMessages.join(', ')}
+                </Text>
+            }
+        </Flex>       
+    )
 };

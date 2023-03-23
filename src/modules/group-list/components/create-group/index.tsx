@@ -6,11 +6,11 @@ import { CreateGroupModal } from '../modal'
 
 
 export const CreateGroup = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure()
-
     const [isLargerThan426] = useMediaQuery([
         '(min-width: 426px)'
     ])
+    
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     return(
         <>

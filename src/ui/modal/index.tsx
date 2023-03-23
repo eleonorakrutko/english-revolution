@@ -5,13 +5,14 @@ type Props = {
     isOpen: boolean,
     onClose: () => void,
     children: React.ReactNode,
+    bg?: string
 }
 
-export const CustomModal = ({isOpen, onClose, children}: Props) => {
+export const CustomModal = ({isOpen, onClose, children, bg}: Props) => {
     return(
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
-            <ModalContent>
+            <ModalContent bg={bg}>
                 <ModalCloseButton/>
                 {children}
             </ModalContent>

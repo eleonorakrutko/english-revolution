@@ -1,6 +1,5 @@
 export * from './sign-in'
 export * from './sign-up'
-export * from './student'
 export * from './school'
 export * from './groupList'
 export * from './schedule'

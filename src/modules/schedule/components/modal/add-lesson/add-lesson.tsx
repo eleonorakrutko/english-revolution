@@ -5,10 +5,10 @@ import { validate } from "../../../../../helpers"
 import styles from './index.module.css'
 import { useCreateLessonMutation, useGetGroupsQuery, useGetStudentsQuery } from "../../../api/schedule-api"
 import { CustomInput } from "../../../../../components"
-import { useInputsForm } from "../../../../../common/hooks/useInputsForm"
+import { useInputsForm } from "../../../../../hooks/useInputsForm" 
 import { Person } from "../../../../../types/person"
 import { Group } from "../../../../../types/group"
-import { useTypedDispatch } from "../../../../../common/hooks/useTypedDispatch"
+import { useTypedDispatch } from "../../../../../hooks/useTypedDispatch"
 import { showAlert } from "../../../../layout/store/alert-slice"
 
 type Props = {
@@ -28,6 +28,14 @@ export const AddLessonModal = ({isOpen, onClose}: Props) =>  {
   const [choosedStudentId, setChoosedStudentId] = useState<number | null>(null)
   const [choosedGroupId, setChoosedGroupId] = useState<number | null>(null)
   const [choosedType, setChoosedType] = useState('student')
+
+  const dispatch = useTypedDispatch()
+
+  const [createLesson, {isSuccess, isError}] = useCreateLessonMutation()
+  
+  const {data: students} = useGetStudentsQuery(studentInputValue)
+  const {data: groups} = useGetGroupsQuery('')
+  
   const [inputData, onChangeInputData] = useInputsForm<CreateLessonData>({
     title: '',
     date_from: '',
@@ -35,12 +43,6 @@ export const AddLessonModal = ({isOpen, onClose}: Props) =>  {
     online_meeting_link: ''
   })
 
-  const dispatch = useTypedDispatch()
-
-  const [createLesson, {isSuccess, isError}] = useCreateLessonMutation()
-
-  const {data: students} = useGetStudentsQuery(studentInputValue)
-  const {data: groups} = useGetGroupsQuery('')
 
   useEffect(() => {
     if(isSuccess){

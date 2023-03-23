@@ -1,6 +1,6 @@
 import { Checkbox, FormControl, FormLabel, ModalBody, ModalFooter, ModalHeader, Stack, Text } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import { useTypedDispatch } from "../../../../../common/hooks/useTypedDispatch";
+import { useTypedDispatch } from "../../../../../hooks/useTypedDispatch";
 import { CustomInput } from "../../../../../components";
 import { validate } from "../../../../../helpers";
 import { Person } from "../../../../../types/person";
@@ -18,15 +18,12 @@ type Props = {
 export const AddPersonModal = ({isOpen, onClose, id}: Props) => {
     const [studentInputValue, setStudentInputValue] = useState<string>('')
     const [choosedStudentId, setChoosedStudentId] = useState<number | null>(null)
+
     const dispatch = useTypedDispatch()
 
     const { data: students } = useGetStudentsQuery(studentInputValue, {})
     const [ addPerson, {isError, isSuccess} ] = useAddPersonToTheGroupMutation()
     
-    const addPersonHandler = async () => {
-      addPerson({id, choosedStudentId})
-    }
-
     useEffect(() => {
       if(isSuccess){
           dispatch(showAlert({type: 'success', text: 'Student was successfully added!',}))
@@ -37,6 +34,10 @@ export const AddPersonModal = ({isOpen, onClose, id}: Props) => {
           onClose()
       }
     }, [isSuccess, isError])
+
+    const addPersonHandler = () => {
+      addPerson({id, choosedStudentId})
+    }
 
     return(
         <CustomModal isOpen={isOpen} onClose={onClose}>

@@ -1,6 +1,5 @@
 import React from 'react'
-import { Box, Flex, Text, Wrap, Checkbox, useMediaQuery } from "@chakra-ui/react";
-import { CustomAvatar } from '../../../ui';
+import { Box, Flex, Text, Wrap, Checkbox, useMediaQuery, Avatar } from "@chakra-ui/react";
 import { Person } from '../../../types/person';
 import { Group } from '../../../types/group';
 
@@ -33,7 +32,7 @@ export const SingleAssignList = ({persons, groups, selectedId, callback}: Props)
                         >
                             <Flex align='center'>
                                 <Wrap>
-                                    <CustomAvatar size={isLargerThan426? 'lg' : 'md'} name='Dan Abramov' src='https://bit.ly/kent-c-dodds'/>
+                                    <Avatar size={isLargerThan426? 'lg' : 'md'} name='Dan Abramov' src='https://bit.ly/kent-c-dodds'/>
                                 </Wrap>
                                 <Flex direction='column' ml={4}>
                                     <Text mb={1} fontSize={isLargerThan426? 'xl' : 'sm'} as='b' color='black'>

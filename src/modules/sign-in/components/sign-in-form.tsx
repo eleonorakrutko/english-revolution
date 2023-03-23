@@ -1,16 +1,16 @@
 import React, { useEffect, ChangeEvent } from 'react';
 import { Wrap, Box, Modal, ModalContent, ModalHeader, ModalCloseButton, ModalBody, useDisclosure, Text } from '@chakra-ui/react';
 import styles from './sign-in-form.module.css'
-import { CustomButton } from '../../../ui';
+import { CustomButton, CustomModal } from '../../../ui';
 import { useNavigate } from 'react-router-dom';
 import {useState} from 'react'
 import { validate } from '../../../helpers';
 import { signIn } from '../store/action-creators'; 
-import { useTypedDispatch } from '../../../common/hooks/useTypedDispatch';
-import { useTypedSelector } from '../../../common/hooks/useTypedSelector';
+import { useTypedDispatch } from '../../../hooks/useTypedDispatch';
+import { useTypedSelector } from '../../../hooks/useTypedSelector';
 import { RolesEnum } from '../../../types/roles-enum';
 import { CustomInput } from '../../../components';
-import { useInputsForm } from '../../../common/hooks/useInputsForm';
+import { useInputsForm } from '../../../hooks/useInputsForm';
 
 interface SignInData{
     email: string,
@@ -18,22 +18,18 @@ interface SignInData{
 }
 
 export const SignInForm = () => {
-    const [isErrorBorder, setIsErrorBorder] = useState<boolean>(false)
-    const [inputData, onChangeInputData] = useInputsForm<SignInData>({
-        email: '',
-        password: ''
-    })
-
+    const { user, error } = useTypedSelector(state => state.authReducer)
+    const dispatch = useTypedDispatch()
     const navigate = useNavigate()
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const dispatch = useTypedDispatch()
-    const { user, error } = useTypedSelector(state => state.authReducer)
-
-    const moveToSignUp = () => {
-        navigate('/sign-up')
-    }
+    const [isErrorBorder, setIsErrorBorder] = useState<boolean>(false)
+    
+    const [inputData, onChangeInputData] = useInputsForm<SignInData>({
+        email: '',
+        password: ''
+    })
 
     useEffect(() => {
         if(error && error !== "Check authorization error"){
@@ -48,10 +44,15 @@ export const SignInForm = () => {
             navigate('/group-list')
         }
     }, [user, error])
+ 
+    const moveToSignUp = () => {
+        navigate('/sign-up')
+    }
 
     const onSubmit = () => {
         const {email, password} = inputData
         dispatch(signIn({email, password}))
+
     }
 
     const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -62,15 +63,12 @@ export const SignInForm = () => {
     return (
         <>
             {error && 
-                <Modal isOpen={isOpen} onClose={onClose}>
-                    <ModalContent bg='red.100'>
+                <CustomModal isOpen={isOpen} onClose={onClose} bg='red.100'>
                     <ModalHeader>Sign in failed</ModalHeader>
-                    <ModalCloseButton />
                     <ModalBody pb='20px'>
                         <Text>{error}</Text>
                     </ModalBody>
-                    </ModalContent>
-                </Modal>
+                </CustomModal>
             }
             
             <Box className={styles.container}>

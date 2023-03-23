@@ -1,20 +1,20 @@
-import { Flex, Text, useMediaQuery, Wrap } from "@chakra-ui/react";
+import { Avatar, Flex, Text, useMediaQuery, Wrap } from "@chakra-ui/react";
 import React from "react";
-import { useTypedSelector } from "../../common/hooks/useTypedSelector";
+import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { RolesEnum } from "../../types/roles-enum";
-import { CustomAvatar } from "../../ui";
 
-export const ProfileModule = () => {
-    const { user } = useTypedSelector(state => state.authReducer)
-
+export const ProfileComponent = () => {
     const [isLargerThan426] = useMediaQuery([
         '(min-width: 426px)'
     ])
+
+    const { user } = useTypedSelector(state => state.authReducer)
+
     return (
         <Flex direction='column' p={4}>
             <Flex direction={isLargerThan426? 'row' : 'column'} align='center' justify='space-between' bgGradient='linear(to-l, #9F7AEA, #E9D8FD)' borderRadius='20px' p={4}>
-                <Flex align='center' >
-                    <CustomAvatar size="lg" name='Dan Abramov' src="https://bit.ly/dan-abramov"/>
+                <Flex align='center'>
+                    <Avatar size="lg" name='Dan Abramov' src="https://bit.ly/dan-abramov"/>
                     <Flex direction='column'ml={4} mb={isLargerThan426? 0 : 2}>
                         <Text fontSize={isLargerThan426? '3xl' : 'lg'}  as='b'>
                             {user?.first_name} {user?.last_name}

@@ -1,8 +1,7 @@
 import React from 'react'
-import { Box, Flex, Text, useMediaQuery, Wrap } from "@chakra-ui/react";
-import { CustomAvatar } from '../../../../ui'; 
+import { Avatar, Box, Flex, Text, useMediaQuery, Wrap } from "@chakra-ui/react"; 
 import moment from 'moment';
-import { Cooperations } from '../../../../types/cooperations';
+import { Cooperations } from '../../../types/cooperations';
 
 type Props = {
     cooperations: Cooperations[],
@@ -28,7 +27,7 @@ export const ListOutgoingCooperations = ({cooperations}: Props) => {
                     >
                         <Flex align='center'>
                             <Wrap>
-                                <CustomAvatar size={isLargerThan426? 'lg' : 'md'} name='Dan Abramov' src='https://bit.ly/kent-c-dodds'/>
+                                <Avatar size={isLargerThan426? 'lg' : 'md'} name='Dan Abramov' src='https://bit.ly/kent-c-dodds'/>
                             </Wrap>
                             <Flex direction='column' ml={4}>
                                 <Text mb={1} fontSize={isLargerThan426? 'xl' : 'sm'} as='b' color='black'>{last_name} {first_name}</Text>

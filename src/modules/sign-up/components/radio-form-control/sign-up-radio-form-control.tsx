@@ -1,7 +1,7 @@
 import React from "react";
-import { FormControl, FormLabel } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { RadioCardGroup } from "../../../../components/radio-card-group";
-import styles from './sign-up-radio-form-control.module.css'
+import styles from './index.module.css'
 import { RolesEnum } from "../../../../types/roles-enum";
 
 type Props = {
@@ -11,12 +11,11 @@ type Props = {
 
 export const RadioFormControl = ({options, setChoosedOption}: Props) => {
     return(
-        <FormControl className={styles.wrapper}>
-            <FormLabel className={styles.formLabel}>Your Role</FormLabel>
-            <div className={styles.wrapperRadio}>
+        <Flex direction='column' className={styles.wrapper}>
+            <Text mb={2}>Your Role</Text>
+            <Flex justify='center'>
                 <RadioCardGroup options={options} setChoosedOption={setChoosedOption}/>
-            </div>
-        </FormControl>
-        
+            </Flex>
+        </Flex>
     )
 }

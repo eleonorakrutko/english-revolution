@@ -1,16 +1,22 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import CookiesService from "../../../../services/cookie-service";
 
-export const signIn = createAsyncThunk(
+export const signIn = createAsyncThunk( //функц которая создает action (оъбект с type и payload)
     'auth/signIn',
     async (credentials: {email: string, password: string}, thunkAPI) => {                     
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/auth/sign-in`, credentials)
             CookiesService.setAuthorizationToken(response.data.token)
-            return response.data.user;
+            return response.data.user; //в случае успеха это action payload
         } catch (e) {
-            return thunkAPI.rejectWithValue("Authorization error")
+            const isAxiosError = e instanceof AxiosError
+            if(isAxiosError && Array.isArray(e.response?.data.message)){
+                return thunkAPI.rejectWithValue(e.response?.data.message.join(', ')) //ошибка action.payload
+            }
+            if(isAxiosError && typeof e.response?.data.message === 'string'){
+                return thunkAPI.rejectWithValue(e.response.data.message)
+            }
         }
     }
 )
@@ -26,7 +32,7 @@ export const checkAuthorization = createAsyncThunk(
             })
             return response.data
         } catch (e) {
-            return thunkAPI.rejectWithValue("Check authorization error")
+            return thunkAPI.rejectWithValue("Check authorization error")  //под капотом происходит dispatch type.rejected
         }
     }
 )

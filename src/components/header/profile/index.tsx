@@ -1,18 +1,17 @@
 import React from "react";
-import { Wrap, Icon, Text } from "@chakra-ui/react";
+import { Icon, Text, Flex, Avatar } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { CustomAvatar, CustomButton, CustomPopover } from "../../../ui";
-import styles from './index.module.css'
+import { CustomButton, CustomPopover } from "../../../ui";
 import { MdLogout } from "../../icons";
 import CookiesService from "../../../services/cookie-service";
-import { useTypedSelector } from "../../../common/hooks/useTypedSelector";
-import { useTypedDispatch } from "../../../common/hooks/useTypedDispatch";
+import { useTypedSelector } from "../../../hooks/useTypedSelector";
+import { useTypedDispatch } from "../../../hooks/useTypedDispatch";
 import { setUser } from "../../../modules/sign-in/store/auth-slice";
 
 export const Profile = () => {
-    const navigate = useNavigate()
     const { user } = useTypedSelector(state => state.authReducer)
     const dispatch = useTypedDispatch()
+    const navigate = useNavigate()
 
     const logout = () => {
         dispatch(setUser(null))
@@ -21,10 +20,10 @@ export const Profile = () => {
     }
     
     return(
-        <Wrap align='center' className={styles.profileWrapper}>
-            <Text>{user?.first_name} {user?.last_name}</Text>
+        <Flex align='center'>
+            <Text as='b' mr={3}>{user?.first_name} {user?.last_name}</Text>
             <CustomPopover 
-                trigger={<button><CustomAvatar name='Dan Abramov' src="https://bit.ly/dan-abramov"/></button>} 
+                trigger={<button><Avatar name='Dan Abramov' src="https://bit.ly/dan-abramov"/></button>} 
                 content={
                     <CustomButton 
                         text="Log out" 
@@ -34,6 +33,6 @@ export const Profile = () => {
                     />
                 }
             />
-        </Wrap>
+        </Flex>
     )
 }

@@ -1,10 +1,8 @@
-import { OutgoingCooperations, SchoolCooperation, StudentCooperation, TeacherDetails } from './../pages';
-import { MdEvent, MdPersonAdd, MdLayers, MdFormatListBulleted, MdPeople, MdPeopleOutline, MdAccountCircle, MdContactMail } from '../components/icons';
-import { AssignTeacherToStudents, TeachersList, ActiveHomeworks, GroupDetails, GroupList, StudentList, Schedule, Profile } from '../pages';
+import { Cooperation, OutgoingCooperations, SchoolCooperation, TeacherDetails } from './../pages';
+import { MdEvent, MdPersonAdd, MdFormatListBulleted, MdPeople, MdPeopleOutline, MdAccountCircle, MdContactMail } from '../components/icons';
+import { AssignTeacherToStudents, TeachersList, GroupDetails, GroupList, StudentList, Schedule, Profile } from '../pages';
 import { RolesEnum } from './../types/roles-enum';
 import { IconType } from 'react-icons';
-import { TeacherCooperation } from '../pages/teacher';
-
 
 export interface INavigationItem {
     path: string,
@@ -33,10 +31,9 @@ const navigationSetup: INavigationItem[] = [
     {path: '/schedule', page: Schedule, roleType: RolesEnum.TEACHER, title: 'Schedule', shouldShowInNav: true, customIcon: MdEvent},
     {path: '/schedule', page: Schedule, roleType: RolesEnum.STUDENT, title: 'Schedule', shouldShowInNav: true, customIcon: MdEvent},
 
-    {path: '/cooperation', page: StudentCooperation, roleType: RolesEnum.STUDENT, title: 'Cooperation', shouldShowInNav: true, customIcon: MdContactMail},
-    {path: '/cooperation', page: TeacherCooperation, roleType: RolesEnum.TEACHER, title: 'Cooperation', shouldShowInNav: true, customIcon: MdContactMail},
+    {path: '/cooperation', page: Cooperation, roleType: RolesEnum.STUDENT, title: 'Cooperation', shouldShowInNav: true, customIcon: MdContactMail},
+    {path: '/cooperation', page: Cooperation, roleType: RolesEnum.TEACHER, title: 'Cooperation', shouldShowInNav: true, customIcon: MdContactMail},
     {path: '/cooperation', page: SchoolCooperation, roleType: RolesEnum.SCHOOL_SUPER_ADMIN, title: 'Cooperation', shouldShowInNav: true, customIcon: MdContactMail},
-
     
     {path: '/student-list', page: StudentList, roleType: RolesEnum.TEACHER, title: 'Students', shouldShowInNav: true, customIcon: MdPeopleOutline},
     {path: '/student-list', page: StudentList, roleType: RolesEnum.SCHOOL_SUPER_ADMIN, title: 'Students', shouldShowInNav: true, customIcon: MdPeopleOutline},

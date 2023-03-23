@@ -8,9 +8,9 @@ import { MdContentPasteSearch, MdDelete } from "../../components";
 import { CreateGroup } from "./components";  
 import { RolesEnum } from "../../types/roles-enum";
 import { useDeleteGroupMutation, useGetGroupsQuery } from "./api/group-api";
-import { useTypedSelector } from "../../common/hooks/useTypedSelector";
+import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { showAlert } from "../layout/store/alert-slice";
-import { useTypedDispatch } from "../../common/hooks/useTypedDispatch";
+import { useTypedDispatch } from "../../hooks/useTypedDispatch";
 
 type Arguments = {
     name: string,
@@ -19,13 +19,19 @@ type Arguments = {
 }
 
 export const GroupListModule = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const [id, setId] = useState<number | null>(null)
+    const [isLargerThan426] = useMediaQuery([
+        '(min-width: 426px)'
+    ])
+
     const { user } = useTypedSelector(state => state.authReducer)
     const dispatch = useTypedDispatch()
+    
+    const [id, setId] = useState<number | null>(null)
 
     const [ deleteGroup, {isSuccess, isError} ] = useDeleteGroupMutation()
     const { data: groups, isFetching } = useGetGroupsQuery('')
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     useEffect(() => {
         if(isSuccess){
@@ -42,10 +48,6 @@ export const GroupListModule = () => {
         setId(id)
         onOpen()
     }
-
-    const [isLargerThan426] = useMediaQuery([
-        '(min-width: 426px)'
-    ])
 
     return(
         <>

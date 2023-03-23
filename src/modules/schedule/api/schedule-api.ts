@@ -61,7 +61,6 @@ export const scheduleApi = createApi({
     }
 })
 
-
 export const {
     useGetScheduleQuery,
     useGetLessonDetailsQuery,

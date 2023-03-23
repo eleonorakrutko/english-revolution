@@ -1,6 +1,6 @@
 import { ModalFooter, ModalHeader} from '@chakra-ui/react'
 import React, {useEffect} from 'react'
-import { useTypedDispatch } from '../../../../common/hooks/useTypedDispatch'
+import { useTypedDispatch } from '../../../../hooks/useTypedDispatch'
 import { RequestForCooperationStatus } from '../../../../types/request-for-cooperation-status'
 import { CustomButton, CustomModal } from '../../../../ui'
 import { showAlert } from '../../../layout/store/alert-slice'
@@ -13,9 +13,10 @@ type Props = {
     status: RequestForCooperationStatus | string,
 }
 
-export const ConfirmModal = ({ onClose, isOpen, id, status }: Props) => {
+export const DecisionConfirmModal = ({ onClose, isOpen, id, status }: Props) => {
     const [ makeDecision, {isSuccess, isError} ] = useMakeDecisionMutation()
     const dispatch = useTypedDispatch()
+
     const makeDecisionHandler = () => {
         makeDecision({
             id,
@@ -32,7 +33,7 @@ export const ConfirmModal = ({ onClose, isOpen, id, status }: Props) => {
             dispatch(showAlert({type: 'error', text: 'Failed to make decision'}))
             onClose()
         }
-      }, [isSuccess, isError])
+    }, [isSuccess, isError])
 
     return(
         <CustomModal isOpen={isOpen} onClose={onClose}>

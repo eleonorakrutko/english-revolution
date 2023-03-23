@@ -1,9 +1,9 @@
 import { Text } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { RequestForCooperationStatus } from "../../../../types/request-for-cooperation-status";
-import { CustomButtonGroupCooperations, CustomSpinner } from "../../../../ui";
-import { useGetOutgoingCooperationsQuery } from "../../api/cooperations-api";
-import { ListOutgoingCooperations } from "../../components/list-outgoing-cooperations";
+import { RequestForCooperationStatus } from "../../../types/request-for-cooperation-status";
+import { CustomButtonGroupCooperations, CustomSpinner } from "../../../ui";
+import { useGetOutgoingCooperationsQuery } from "../api/cooperations-api";
+import { ListOutgoingCooperations } from "../components/list-outgoing-cooperations";
 
 export const OutgoingCooperationsModule = () => {
     const [cooperationsStatus, setCooperationsStatus] = useState<RequestForCooperationStatus>(RequestForCooperationStatus.PENDING)

@@ -3,9 +3,9 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { SignIn, SignUp } from "../../pages";
 import { Layout } from "../../modules";
 import { getPagesByRole } from "../../setup/navigation";
-import { useTypedDispatch } from "../../common/hooks/useTypedDispatch";
+import { useTypedDispatch } from "../../hooks/useTypedDispatch";
 import { checkAuthorization } from "../../modules/sign-in/store/action-creators";
-import { useTypedSelector } from "../../common/hooks/useTypedSelector";
+import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { CustomSpinner } from "../../ui";
 
 interface Route {
@@ -14,11 +14,11 @@ interface Route {
 }
 
 export const AppRouter = () => {
-    const dispatch = useTypedDispatch()
     const { user, loading, error } = useTypedSelector(state => state.authReducer)
-
+    const dispatch = useTypedDispatch()
+    
     useEffect(() => {
-        dispatch(checkAuthorization())
+        dispatch(checkAuthorization()) // при перезагрузке стр браузера state обнуляется 
     }, [])
 
     return (
@@ -31,15 +31,19 @@ export const AppRouter = () => {
                     <Route path="/sign-up" element={<SignUp/>}/>
 
                     {error && 
-                        <Route path='/' element={<Navigate to={"/sign-in"}/>}/>
+                        <Route path='*' element={<Navigate to="/sign-in"/>}/>
                     }
                  
                     {user && 
                         <Route path="/" element={<Layout/>}>
                             <Route path='' element={<Navigate to={getPagesByRole(user.role_type)[0].path}/>}/>
                             { getPagesByRole(user.role_type).map(({page: Page, path}: Route) => 
-                                <Route key={path} path={path} element={<Page/>}/>
+                                <Route key={path} path={path} element={<Page/>}/>  //роут ожидает в пропсе JSX элемент, по настройкам webpack ожидает название элемента с большой буквы 
                             )}
+                            <Route
+                                path="*"
+                                element={<Navigate to="/"/>}
+                            />
                         </Route>
                     }
                 </Routes>
@@ -47,3 +51,4 @@ export const AppRouter = () => {
         </>
     )
 } 
+

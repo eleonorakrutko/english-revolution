@@ -20,12 +20,9 @@ export const authSlice = createSlice({
     reducers: {
         setUser(state, action: PayloadAction<User | null>) {
             state.user = action.payload
-        },
-        setLoading(state, action: PayloadAction<boolean>) {
-            state.loading = action.payload
         }
     },
-    extraReducers: {
+    extraReducers: {  //это для Thunk
         [signIn.pending.type]: (state: AuthState) => {
             state.loading = true
         },
@@ -56,4 +53,4 @@ export const authSlice = createSlice({
 
 export const authReducer =  authSlice.reducer;
 
-export const {setUser, setLoading} = authSlice.actions
+export const {setUser} = authSlice.actions

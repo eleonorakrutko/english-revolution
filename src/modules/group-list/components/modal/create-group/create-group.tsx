@@ -4,7 +4,7 @@ import { CustomButton, CustomModal } from "../../../../../ui";
 import { validate } from "../../../../../helpers";
 import { useCreateGroupMutation } from "../../../api/group-api";
 import { CustomInput } from "../../../../../components";
-import { useTypedDispatch } from "../../../../../common/hooks/useTypedDispatch";
+import { useTypedDispatch } from "../../../../../hooks/useTypedDispatch";
 import { showAlert } from "../../../../layout/store/alert-slice";
 
 type Props = {
@@ -14,6 +14,7 @@ type Props = {
 
 export const CreateGroupModal = ({onClose, isOpen}: Props) => {
     const [groupName, setGroupName] = useState<string>('')
+    
     const dispatch = useTypedDispatch()
 
     const [ createGroup, {isSuccess, isError} ] = useCreateGroupMutation()
@@ -29,7 +30,7 @@ export const CreateGroupModal = ({onClose, isOpen}: Props) => {
         }
     }, [isSuccess, isError])
 
-    const createGroupHandler = async () => {
+    const createGroupHandler = () => {
         createGroup(groupName)
         setGroupName('')
     }

@@ -1,46 +1,36 @@
 import { Flex, Text, useDisclosure, useMediaQuery } from "@chakra-ui/react";
 import moment from "moment";
 import React, { useState } from "react";
+import { Cooperations } from "../../types/cooperations";
 import { RequestForCooperationStatus } from "../../types/request-for-cooperation-status";
 import { CustomButton, CustomButtonGroupCooperations, CustomSpinner } from "../../ui";
 import { useGetIncomingCooperationsQuery } from "./api/cooperations-api"; 
-import { ConfirmModal } from "./components/modal/confirm"; 
-
-type Props = {
-    created_at: string, 
-    email: string, 
-    first_name: string,
-    from: string,
-    id: number,
-    last_name: string,
-    message: string,
-    status: string, 
-    username: string,
-}
+import { DecisionConfirmModal } from "./components/modal/decision-confirm"; 
 
 export const CooperationModule = () => {
+    const [isLargerThan426] = useMediaQuery([
+        '(min-width: 426px)'
+    ])
+
     const [choosedStatus, setChoosedStatus] = useState<string>('')
     const [choosedId, setChoosedId] = useState<number | null>(null)
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    
     const [cooperationsStatus, setCooperationsStatus] = useState<RequestForCooperationStatus>(RequestForCooperationStatus.PENDING)
 
-    const setCooperationsStatusHandler = (status: RequestForCooperationStatus) => {
-        setCooperationsStatus(status)
-    }
-
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    
     const {data: incomingCooperations, isFetching} = useGetIncomingCooperationsQuery(`status=${cooperationsStatus}`, {
         skip: isOpen  //не вызвается и не ререндерится пока не закрыта модалка
     })
+   
+    const setCooperationsStatusHandler = (status: RequestForCooperationStatus) => {
+        setCooperationsStatus(status)
+    }
 
     const openConfirmModal =  (id: number, status: RequestForCooperationStatus) => {
         setChoosedStatus(status)
         setChoosedId(id)
         onOpen()
     }
-    const [isLargerThan426] = useMediaQuery([
-        '(min-width: 426px)'
-    ])
 
     return(
         <>
@@ -51,12 +41,12 @@ export const CooperationModule = () => {
                 :
                 <>
                     {isOpen && 
-                        <ConfirmModal isOpen={isOpen} onClose={onClose} id={choosedId} status={choosedStatus}/>
+                        <DecisionConfirmModal isOpen={isOpen} onClose={onClose} id={choosedId} status={choosedStatus}/>
                     }
 
                     {incomingCooperations &&
                         <>
-                            {incomingCooperations.map(({first_name, last_name, email, created_at, message, username, id, status}: Props) => 
+                            {incomingCooperations.map(({first_name, last_name, email, created_at, message, username, id, status}: Cooperations) => 
                                 <Flex 
                                     m='10px 0' 
                                     key={id} 
@@ -88,7 +78,6 @@ export const CooperationModule = () => {
                                                 {moment(created_at).format('MMMM, DD HH:mm')}
                                             </Text>
                                         </Flex>
-                                        
                                     </Flex>  
 
                                     {status === RequestForCooperationStatus.PENDING?
@@ -120,12 +109,9 @@ export const CooperationModule = () => {
                                 <Text fontSize='xl' textAlign='center'>You don't have incoming cooperations</Text>
                             }
                         </>
-                       
-                        
                     }
                 </>
             }
-            
         </>
     )
 }

@@ -3,7 +3,7 @@ import { Flex, Text, Icon, ButtonGroup, useMediaQuery } from '@chakra-ui/react'
 import { CustomButton } from "../../../../ui";
 import { MdNavigateBefore, MdNavigateNext, MdOutlineAdd } from "../../../../components/icons";
 import { RolesEnum } from "../../../../types/roles-enum";
-import { useTypedSelector } from "../../../../common/hooks/useTypedSelector";
+import { useTypedSelector } from "../../../../hooks/useTypedSelector";
 
 type Props = {
     onOpen: () => void,
@@ -12,10 +12,11 @@ type Props = {
 }
 
 export const HeaderSchedule = ({onOpen , nextWeek, prevWeek}: Props) => {
-    const { user } = useTypedSelector(state => state.authReducer)
     const [isLargerThan426] = useMediaQuery([
         '(min-width: 426px)'
     ])
+
+    const { user } = useTypedSelector(state => state.authReducer)
     
     return(
         <Flex justify='space-between' m={isLargerThan426? 5 : 1} align='center' direction={isLargerThan426? 'row' : 'column'} >
@@ -37,7 +38,7 @@ export const HeaderSchedule = ({onOpen , nextWeek, prevWeek}: Props) => {
                     />
                 </ButtonGroup>
                 
-                {user?.role_type !== RolesEnum.STUDENT && 
+                {user?.role_type === RolesEnum.TEACHER && 
                     <CustomButton 
                         m={isLargerThan426? 0 : 3}
                         text="Add Lesson" 

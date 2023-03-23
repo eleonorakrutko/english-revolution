@@ -1,14 +1,14 @@
 import { Box, Text, Icon, Wrap } from "@chakra-ui/react";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { useTypedSelector } from "../../common/hooks/useTypedSelector";
+import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { getNavItemsByRole } from "../../setup/navigation";
 import { RolesEnum } from "../../types/roles-enum";
 import styles from './index.module.css'
 
 
 export const Navigation = () => {
-    const { user, loading, error } = useTypedSelector(state => state.authReducer)
+    const { user } = useTypedSelector(state => state.authReducer)
 
     const navItems = getNavItemsByRole(user?.role_type as RolesEnum)
 

@@ -4,20 +4,18 @@ import { List } from "../../components";
 import { CustomSpinner } from "../../ui";
 import { DeleteConfirmModal } from "../../components";
 import { useDeleteStudentsMutation, useGetStudentsQuery } from "./api/students-api";
-import { useTypedDispatch } from "../../common/hooks/useTypedDispatch";
+import { useTypedDispatch } from "../../hooks/useTypedDispatch";
 import { showAlert } from "../layout/store/alert-slice";
 
 export const StudentListModule = () => {
-    const {data: students, isFetching} = useGetStudentsQuery('')
-    const [ deleteStudents, {isSuccess, isError} ] = useDeleteStudentsMutation()
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const [id, setId] = useState<number | null>(null)
     const dispatch = useTypedDispatch()
 
-    const openConfirmModal = (id: number) => {
-        setId(id)
-        onOpen()
-    }
+    const [id, setId] = useState<number | null>(null)
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const {data: students, isFetching} = useGetStudentsQuery('')
+    const [ deleteStudents, {isSuccess, isError} ] = useDeleteStudentsMutation()
 
     useEffect(() => {
       if(isSuccess){
@@ -29,6 +27,11 @@ export const StudentListModule = () => {
           onClose()
       }
     }, [isSuccess, isError])
+
+    const openConfirmModal = (id: number) => {
+        setId(id)
+        onOpen()
+    }
 
     return(
         <>

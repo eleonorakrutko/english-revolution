@@ -1,22 +1,20 @@
 import { Text, useDisclosure } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import { useTypedDispatch } from "../../../common/hooks/useTypedDispatch";
+import { useTypedDispatch } from "../../../hooks/useTypedDispatch";
 import { DeleteConfirmModal, List } from "../../../components";
 import { showAlert } from "../../../modules/layout/store/alert-slice";
 import { CustomSpinner } from "../../../ui";
 import { useDeleteTeachersMutation, useGetTeachersQuery } from "../api/teachers-api";
 
 export const TeachersListModule = () => {
-    const {data: teachers, isFetching} = useGetTeachersQuery('')
-    const [ deleteTeachers, {isSuccess, isError} ] = useDeleteTeachersMutation()
-    const [id, setId] = useState<number | null>(null)
-    const { isOpen, onOpen, onClose } = useDisclosure()
     const dispatch = useTypedDispatch()
 
-    const openConfirmModal = (id: number) => {
-        setId(id)
-        onOpen()
-    }
+    const [id, setId] = useState<number | null>(null)
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    
+    const {data: teachers, isFetching} = useGetTeachersQuery('')
+    const [ deleteTeachers, {isSuccess, isError} ] = useDeleteTeachersMutation()
 
     useEffect(() => {
         if(isSuccess){
@@ -27,9 +25,13 @@ export const TeachersListModule = () => {
             dispatch(showAlert({type: 'error', text: 'Failed to delete teacher'}))
             onClose()
         }
-      }, [isSuccess, isError])
+    }, [isSuccess, isError])
 
-    console.log(teachers)
+    const openConfirmModal = (id: number) => {
+        setId(id)
+        onOpen()
+    }
+
     return(
         <>
             <Text fontSize='2xl'>Teachers List</Text>

@@ -6,14 +6,14 @@ type Props = {
     variant?: string, 
     callback?: () => void, 
     disabled?: boolean,
-    colorSheme? : string,
-    borderRadius? : string,
-    size? : string,
+    colorSheme?: string,
+    borderRadius?: string,
+    size?: string,
     isActive?: boolean,
     rightIcon?: ReactElement<"svg"> | undefined,
     leftIcon?: ReactElement<"svg"> | undefined,
-    p? : number | string
-    m? : number | string
+    p?: number | string
+    m?: number | string
 }
 
 export const CustomButton = ({
@@ -28,7 +28,7 @@ export const CustomButton = ({
     colorSheme = 'purple', 
     borderRadius, 
     rightIcon, 
-    leftIcon
+    leftIcon,
 }: Props) => {
     return (
         <Button 

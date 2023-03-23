@@ -1,6 +1,6 @@
 import { ButtonGroup, Flex, Text, useDisclosure, useMediaQuery } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import { useTypedDispatch } from "../../../common/hooks/useTypedDispatch";
+import { useTypedDispatch } from "../../../hooks/useTypedDispatch"; 
 import { showAlert } from "../../../modules/layout/store/alert-slice";
 import { CustomButton, CustomSpinner } from "../../../ui";
 import { useAssignGroupToTeacherMutation, useAssignStudentsToTeacherMutation, useGetGroupForAssignQuery, useGetStudentForAssignQuery } from "../api/assign-api";
@@ -11,9 +11,16 @@ import { SingleAssignList } from "../components/single-assign-list";
 
 
 export const AssignModule = () => {
+    const [isLargerThan426] = useMediaQuery([
+        '(min-width: 426px)'
+    ])
+
+    const dispatch = useTypedDispatch()
+    
     const [selectedTeacherId, setSelectedTeacherId] = useState<number | null>(null);
     const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
     const [selectedStudentsIds, setSelectedStudentsIds] = useState<number[]>([])
+    const [type, setType] = useState<string>('students')
 
     const {isOpen, onClose, onOpen} = useDisclosure()
 
@@ -27,14 +34,7 @@ export const AssignModule = () => {
 
     const [ assignGroup, {isSuccess: isSuccessAssignGroup, isError: isErrorAssignGroup} ] = useAssignGroupToTeacherMutation()
     const [ assignStudents, {isSuccess: isSuccessAssignStudents, isError: isErrorAssignStudents} ] = useAssignStudentsToTeacherMutation()
-    const [type, setType] = useState<string>('students')
-
-    const dispatch = useTypedDispatch()
-
-    const [isLargerThan426] = useMediaQuery([
-        '(min-width: 426px)'
-    ])
-
+ 
     useEffect(() => {
         if(type === 'students'){
             setSelectedStudentsIds([])
@@ -74,7 +74,7 @@ export const AssignModule = () => {
             setSelectedTeacherId(null)
             setSelectedStudentsIds([])
         }
-      }, [isSuccessAssignStudents, isErrorAssignStudents])
+    }, [isSuccessAssignStudents, isErrorAssignStudents])
 
     const onCheckedMultiplyHandler = (id: number, checked: boolean) => {
         if(checked && selectedStudentsIds){
@@ -84,7 +84,6 @@ export const AssignModule = () => {
         if(selectedStudentsIds){
             setSelectedStudentsIds(selectedStudentsIds.filter((currentId) => currentId !== id))
         }
-        
     }
 
     const onCheckTeacherHandler = (id: number | null) => {

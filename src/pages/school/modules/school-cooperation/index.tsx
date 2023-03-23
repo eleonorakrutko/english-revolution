@@ -9,9 +9,10 @@ import { useGetNewStudentsQuery, useGetNewTeachersQuery } from "../../api/cooper
 
 
 export const SchoolCooperationModule = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
     const [userId, setUserId] = useState<number | null>(null)
     const [type, setType] = useState<string>('students')
+
+    const { isOpen, onOpen, onClose } = useDisclosure();
  
     const {data: newStudents, isFetching: isFetchingNewStudents} = useGetNewStudentsQuery('')
     const {data: newTeachers, isFetching: isFetchingNewTeachers} = useGetNewTeachersQuery('')

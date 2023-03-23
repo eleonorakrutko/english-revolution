@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Text, useDisclosure, useMediaQuery, Icon } from '@chakra-ui/react'
 import React, {useState, useEffect} from 'react'
 import { useParams } from 'react-router-dom'
-import { useTypedDispatch } from '../../../common/hooks/useTypedDispatch'
+import { useTypedDispatch } from '../../../hooks/useTypedDispatch'
 import { DeleteConfirmModal, List, MdDelete } from '../../../components'
 import { showAlert } from '../../../modules/layout/store/alert-slice'
 import { Group } from '../../../types/group'
@@ -13,17 +13,39 @@ export const TeacherDetailsModule = () => {
         '(min-width: 426px)'
     ])
 
-    const {id} = useParams()
     const dispatch = useTypedDispatch()
+    const [studentId, setStudentId] = useState<number | null>(null)
+    const [groupId, setGroupId] =  useState<number | null>(null)
+    const {id} = useParams()
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen: isOpenGroupModal, onOpen: onOpenGroupModal, onClose: onCloseGroupModal } = useDisclosure()
+    
     const {data: teacherDetails, isFetching} = useGetTeacherDetailsQuery(id)
     const [deleteStudent, {isSuccess, isError}] = useDeleteStudentFromTeacherMutation()
     const [deleteGroup, {isSuccess: isSuccessDeleteGroup, isError: isErrorDeleteGroup}] = useDeleteGroupFromTeacherMutation()
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const { isOpen: isOpenGroupModal, onOpen: onOpenGroupModal, onClose: onCloseGroupModal } = useDisclosure()
+    useEffect(() => {
+        if(isSuccessDeleteGroup){
+            dispatch(showAlert({type: 'success', text: 'Group was successfully deleted!',}))
+            onClose()
+        }
+        if(isErrorDeleteGroup){
+            dispatch(showAlert({type: 'error', text: 'Failed to delete group!'}))
+            onClose()
+        }
+    }, [isSuccessDeleteGroup, isErrorDeleteGroup])
 
-    const [studentId, setStudentId] = useState<number | null>(null)
-    const [groupId, setGroupId] =  useState<number | null>(null)
+    useEffect(() => {
+        if(isSuccess){
+            dispatch(showAlert({type: 'success', text: 'Student was successfully deleted!',}))
+            onClose()
+        }
+        if(isError){
+            dispatch(showAlert({type: 'error', text: 'Failed to delete student!'}))
+            onClose()
+        }
+    }, [isSuccess, isError])
 
     const deleteStudentHandler = (user_id: number | null) => {
         deleteStudent({
@@ -47,27 +69,6 @@ export const TeacherDetailsModule = () => {
         onOpenGroupModal()
         setGroupId(id)
     }
-    useEffect(() => {
-        if(isSuccessDeleteGroup){
-            dispatch(showAlert({type: 'success', text: 'Group was successfully deleted!',}))
-            onClose()
-        }
-        if(isErrorDeleteGroup){
-            dispatch(showAlert({type: 'error', text: 'Failed to delete group!'}))
-            onClose()
-        }
-    }, [isSuccessDeleteGroup, isErrorDeleteGroup])
-
-    useEffect(() => {
-        if(isSuccess){
-            dispatch(showAlert({type: 'success', text: 'Student was successfully deleted!',}))
-            onClose()
-        }
-        if(isError){
-            dispatch(showAlert({type: 'error', text: 'Failed to delete student!'}))
-            onClose()
-        }
-    }, [isSuccess, isError])
 
     return (
         <>

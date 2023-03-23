@@ -2,7 +2,6 @@ import { ModalBody, ModalFooter, ModalHeader, Text} from "@chakra-ui/react";
 import React from "react";
 import { CustomButton, CustomModal } from "../../../ui"
 
-
 type Props = {
     onClose: () => void,
     isOpen: boolean,
@@ -12,7 +11,7 @@ type Props = {
 
 export const DeleteConfirmModal = ({ onClose, isOpen, deleteCallback, typeName }: Props) => {
     
-    const deleteHandler = async () => {
+    const deleteHandler = () => {
         deleteCallback()
         onClose()
     }

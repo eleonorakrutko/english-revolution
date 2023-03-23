@@ -1,7 +1,6 @@
-import { Box, Checkbox, Flex, Text, useMediaQuery, Wrap } from "@chakra-ui/react";
+import { Avatar, Box, Checkbox, Flex, Text, useMediaQuery, Wrap } from "@chakra-ui/react";
 import React from "react";
 import { Person } from "../../../types/person";
-import { CustomAvatar } from "../../../ui";
 
 type Props = {
     persons: Person[],
@@ -30,7 +29,7 @@ export const MultiplyAssignList = ({persons,selectedIds, callback}: Props) => {
                             >
                                 <Flex align='center'>
                                     <Wrap>
-                                        <CustomAvatar size={isLargerThan426? 'lg' : 'md'} name='Dan Abramov' src='https://bit.ly/kent-c-dodds'/>
+                                        <Avatar size={isLargerThan426? 'lg' : 'md'} name='Dan Abramov' src='https://bit.ly/kent-c-dodds'/>
                                     </Wrap>
                                     <Flex direction='column' ml={4}>
                                         <Text mb={1} fontSize={isLargerThan426? 'xl' : 'sm'} as='b' color='black'>

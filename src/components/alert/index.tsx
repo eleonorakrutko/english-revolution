@@ -1,11 +1,15 @@
 import { Alert, AlertIcon, AlertStatus, Box, CloseButton,  Fade, useMediaQuery } from '@chakra-ui/react'
 import React, { useEffect } from 'react'
-import { useTypedDispatch } from '../../common/hooks/useTypedDispatch'
-import { useTypedSelector } from '../../common/hooks/useTypedSelector'
+import { useTypedDispatch } from '../../hooks/useTypedDispatch'
+import { useTypedSelector } from '../../hooks/useTypedSelector'
 import { hideAlert } from '../../modules/layout/store/alert-slice'
 
 export const CustomAlert = () => {
-    const { type, text, isShow } = useTypedSelector((state) => state.alertReducer)
+    const [isLargerThan426] = useMediaQuery([
+        '(min-width: 426px)'
+    ])
+    
+    const { type, text } = useTypedSelector(state => state.alertReducer)
     const dispatch = useTypedDispatch()
 
     const onClose = () => {
@@ -17,10 +21,6 @@ export const CustomAlert = () => {
             onClose()
         }, 5000)
     }, [])
-
-    const [isLargerThan426] = useMediaQuery([
-        '(min-width: 426px)'
-    ])
 
     return(
         <Fade in={true}>

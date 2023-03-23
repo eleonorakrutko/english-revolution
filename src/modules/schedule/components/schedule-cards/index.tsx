@@ -9,8 +9,8 @@ import { LessonDetailModal } from "../modal/lesson-detail/lesson-detail";
 type Props = {
     monday: Moment,
     week: string[], 
-
 }
+
 type Arguments = {
     title: string, 
     id: number, 
@@ -19,18 +19,19 @@ type Arguments = {
     type: string
 }
 
-export const CardOfTheDay = ({monday, week}: Props) => {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+export const ScheduleCards = ({monday, week}: Props) => {
+    const [isLargerThan769] = useMediaQuery([
+        '(min-width: 769px)'
+    ])
+
     const [id, setId] = useState<number | null>(null)
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     const {data: schedule, isFetching} = useGetScheduleQuery(
         {date_from: monday.format('YYYY-MM-DD'),date_to: monday.clone().add(1, 'week').format('YYYY-MM-DD')},
         {skip: isOpen}
     )
-
-    const [isLargerThan769] = useMediaQuery([
-        '(min-width: 769px)'
-    ])
    
     return(
         <>
@@ -83,12 +84,3 @@ export const CardOfTheDay = ({monday, week}: Props) => {
         </>
     )
 }
-
-{/* <LessonsCard 
-                                    topic={title} 
-                                    key={id}
-                                    id={id} 
-                                    type={type}
-                                    time={`${moment(date_from).format('HH:mm')} - ${moment(date_to).format('HH:mm')}`} 
-                                    bg={type === 'INDIVIDUAL'? 'purple.500': 'pink.500'}
-                                /> */}
