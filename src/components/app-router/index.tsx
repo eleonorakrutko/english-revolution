@@ -18,7 +18,7 @@ export const AppRouter = () => {
     const dispatch = useTypedDispatch()
     
     useEffect(() => {
-        dispatch(checkAuthorization()) // при перезагрузке стр браузера state обнуляется 
+        dispatch(checkAuthorization())
     }, [])
 
     return (
@@ -38,7 +38,7 @@ export const AppRouter = () => {
                         <Route path="/" element={<Layout/>}>
                             <Route path='' element={<Navigate to={getPagesByRole(user.role_type)[0].path}/>}/>
                             { getPagesByRole(user.role_type).map(({page: Page, path}: Route) => 
-                                <Route key={path} path={path} element={<Page/>}/>  //роут ожидает в пропсе JSX элемент, по настройкам webpack ожидает название элемента с большой буквы 
+                                <Route key={path} path={path} element={<Page/>}/> 
                             )}
                             <Route
                                 path="*"

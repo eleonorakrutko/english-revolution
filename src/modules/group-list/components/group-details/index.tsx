@@ -27,7 +27,7 @@ export const GroupDetailsComponent = () => {
     const { isOpen: isOpenAddPersons, onOpen: onOpenAddPersons, onClose: onCloseAddPersons } = useDisclosure()
 
     const {data: group, isFetching} = useGetGroupDetailsQuery(Number(id), {
-        skip: isOpenAddPersons  //не вызвается и не ререндерится пока не закрыта модалка
+        skip: isOpenAddPersons 
     })
     const [deleteStudent, {isSuccess, isError}] = useDeleteStudentFromGroupMutation()
 

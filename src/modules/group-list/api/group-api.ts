@@ -1,10 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import CookiesService from '../../../services/cookie-service'
 
-//конфигурация api (настройка)
 export const groupApi = createApi({
     reducerPath: 'groupApi',
-    baseQuery: fetchBaseQuery({ //скелет для запросов
+    baseQuery: fetchBaseQuery({ 
         baseUrl: process.env.REACT_APP_API_BASE_URL,
         prepareHeaders: (headers) => {
             headers.set('Authorization', `Bearer ${CookiesService.getAuthorizationToken()}`)

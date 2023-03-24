@@ -29,5 +29,3 @@ export const Navigation = () => {
         </Wrap>
     )
 }
-
-//в общий модуль

@@ -13,9 +13,7 @@ abstract class CookiesService {
     }
 
     static setAuthorizationToken(value: string, options = {}): void {
-        const day = new Date();
-        day.setMonth(day.getMonth() + 1)
-        this.cookies.set("authToken", value, {path: "/", sameSite: "strict", ...options, expires: day})
+        this.cookies.set("authToken", value, {path: "/", sameSite: "strict", ...options})
     }
 
     static getAuthorizationToken(): string {

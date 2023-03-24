@@ -29,7 +29,7 @@ export const ScheduleCards = ({monday, week}: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const {data: schedule, isFetching} = useGetScheduleQuery(
-        {date_from: monday.format('YYYY-MM-DD'),date_to: monday.clone().add(1, 'week').format('YYYY-MM-DD')},
+        {date_from: monday.format('YYYY-MM-DD'), date_to: monday.clone().add(1, 'week').format('YYYY-MM-DD')},
         {skip: isOpen}
     )
    

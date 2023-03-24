@@ -33,11 +33,8 @@ export const Layout = () => {
                 </GridItem>
                 <GridItem area={'main'} p={6} bg='white'>
                     <Outlet/>  
-                    {/* заменяется на вложенные роуты в app-route */}
                 </GridItem>
             </Grid>
-        </>
-        
-           
+        </>     
     )
 }

@@ -22,7 +22,7 @@ export const authSlice = createSlice({
             state.user = action.payload
         }
     },
-    extraReducers: {  //это для Thunk
+    extraReducers: {  
         [signIn.pending.type]: (state: AuthState) => {
             state.loading = true
         },

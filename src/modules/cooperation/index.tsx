@@ -19,7 +19,7 @@ export const CooperationModule = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     
     const {data: incomingCooperations, isFetching} = useGetIncomingCooperationsQuery(`status=${cooperationsStatus}`, {
-        skip: isOpen  //не вызвается и не ререндерится пока не закрыта модалка
+        skip: isOpen
     })
    
     const setCooperationsStatusHandler = (status: RequestForCooperationStatus) => {

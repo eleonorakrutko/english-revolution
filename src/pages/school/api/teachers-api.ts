@@ -12,7 +12,7 @@ export const teachersApi = createApi({
         }
     }),
     tagTypes: ['teachers', 'teacher'],
-    refetchOnMountOrArgChange: true,  //при каждом маунтинге (это когда компонент появляется на экране)
+    refetchOnMountOrArgChange: true, 
     endpoints: (build) => {
         return {
             getTeachers: build.query({
