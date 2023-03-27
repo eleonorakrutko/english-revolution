@@ -9,16 +9,12 @@ export interface validationResult{
 export const validate = (value: string, {minLength, maxLength, isEmail, isBefore, isAfter}: ValidationOptions): validationResult => {
     const errorMessages = []
 
-    if(isBefore){
-        if(!moment(value).isSameOrBefore(moment(isBefore))){
-            errorMessages.push(`Date should be before than ${moment(isBefore).format('DD MM YYYY HH:hh')}`)
-        }
+    if(isBefore && !moment(value).isSameOrBefore(moment(isBefore))){
+        errorMessages.push(`Date should be before than ${moment(isBefore).format('DD MM YYYY HH:hh')}`)
     }
 
-    if(isAfter){
-        if(!moment(value).isSameOrAfter(moment(isAfter))){
-            errorMessages.push(`Date should be after than ${moment(isAfter).format('DD MM YYYY HH:hh')}`)
-        }
+    if(isAfter && !moment(value).isSameOrAfter(moment(isAfter))){
+        errorMessages.push(`Date should be after than ${moment(isAfter).format('DD MM YYYY HH:hh')}`)  
     }
     
     if(isEmail){
@@ -28,16 +24,12 @@ export const validate = (value: string, {minLength, maxLength, isEmail, isBefore
         } 
     }
 
-    if(minLength){
-        if(value.length < minLength){
-            errorMessages.push(`Min length should be more than ${minLength}`)
-        } 
+    if(minLength && value.length < minLength){
+        errorMessages.push(`Min length should be more than ${minLength}`) 
     }
 
-    if(maxLength){
-        if(value.length > maxLength){
-            errorMessages.push(`Max length should be less than ${maxLength}`)
-        }
+    if(maxLength && value.length > maxLength){
+        errorMessages.push(`Max length should be less than ${maxLength}`)
     }
 
     return {
